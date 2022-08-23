@@ -6,9 +6,10 @@ public class DecoderTest {
     System.out.println("Masukkan string dalam encoding Hex:");
     Scanner sc = new Scanner(System.in);
     s = sc.next();
-    XORDecoder decoder = new XORDecoder();
+    SingleByteDecoder decoder = new SingleByteDecoder();
     decoder.decrypt(s);
     System.out.println(decoder.getDecryptedMessage());
+    System.out.println(decoder.getKey());
     // result is Cooking MC's like a pound of bacon
     // Key = 88
     sc.close();
