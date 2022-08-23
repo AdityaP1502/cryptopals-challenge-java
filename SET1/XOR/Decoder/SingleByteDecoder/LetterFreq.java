@@ -2,24 +2,25 @@ package SET1.XOR.Decoder.SingleByteDecoder;
 import java.util.HashMap;
 
 public class LetterFreq {
-  static HashMap<Character, Double> letterMap = new HashMap<Character, Double>();
+  public static HashMap<Character, Double> letterMap = new HashMap<Character, Double>();
   private static  boolean hasSet = false;
-  static void setFrequency() {
+  public static void setFrequency() {
     if (hasSet) return;
-    double[] arrScore = {
-      8.2, 1.5, 2.8, 4.3, 13, 2.2, 2, 6.1, 7, 0.15, 0.77, 
-      4, 2.4, 6.7, 7.5, 1.9, 0.095, 6, 6.3, 9.1, 2.8, 0.98, 
-      2.4, 0.15, 2, 0.074
-    };
     char[] characterSet = {
       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 
-      'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
-      'U', 'V', 'W', 'X', 'Y', 'Z'
+      'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'V', 
+      'V', 'W', 'X', 'Y', 'Z', ' '
+    };
+
+    double[] frequencyLetter = {
+      6.53, 1.25, 2.23, 3.28, 10.21, 1.98, 1.62, 4.97, 5.66, 0.097, 
+      0.56, 3.31, 2.02, 5.71, 6.15, 1.5, 0.083, 4.98, 5.31, 7.51, 
+      2.27, 0.79, 1.7, 0.14, 1.42, 0.051, 18.28
     };
     
     int index = 0;
-    while (index < arrScore.length) {
-      letterMap.put(characterSet[index], arrScore[index]); 
+    while (index < characterSet.length) {
+      letterMap.put(characterSet[index], frequencyLetter[index]); 
       index++;
     }
   }
