@@ -19,4 +19,9 @@ public class SingleByteEncoder {
     byte encryptMessage = (byte) (ascii ^ encryptKey);
     return Hex.hexEncoder(encryptMessage);
   }
+
+  public static char encrypt(byte ch, byte key) {
+    byte encryptMessage = (byte) (ch ^ key);
+    return (char) encryptMessage;
+  }
 }
