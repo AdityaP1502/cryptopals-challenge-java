@@ -4,18 +4,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
-import SET1.XOR.Decoder.SingleByteDecoder.XORDecoder;
+import SET1.XOR.Decoder.SingleByteDecoder.SingleByteDecoder;
 
 public class FindSecretMessage {
   public static String getSecret(File file) throws FileNotFoundException, IOException {
     // Brute force method
     Scanner sc = new Scanner(file);
     
-    XORDecoder decoder = new XORDecoder();
+    SingleByteDecoder decoder = new SingleByteDecoder();
 
     String hexString;
     String secretMessage = "";
-    double minScore = 0;
+    double maxScore = 0;
     boolean isMinInitialized = false;
     while (sc.hasNextLine()) {
       hexString = sc.nextLine();
@@ -26,17 +26,17 @@ public class FindSecretMessage {
         // Initialize minScore
         isMinInitialized = true;
         secretMessage = decoder.getDecryptedMessage();
-        minScore = decoder.getMinScore();
+        maxScore = decoder.getMaxScore();
       }
 
-      if (decoder.getMinScore() < minScore) {
+      if (decoder.getMaxScore() > maxScore) {
         secretMessage = decoder.getDecryptedMessage();
-        minScore = decoder.getMinScore();
+        maxScore = decoder.getMaxScore();
       }
       // System.out.println(decoder.getDecryptedMessage());
-      System.out.println(decoder.getMinScore());
+      System.out.println(decoder.getMaxScore());
     }
-    System.out.println(minScore);
+    System.out.println(maxScore);
     sc.close();
     return secretMessage;
   }
