@@ -46,8 +46,8 @@ public class Base64 {
     // temp var
     byte f = 0;
     byte g = 0; 
-    for (int i = 0; i < buffer.length - 1; i++) {
-      mode = mode % 4;
+    for (int i = 0; i < buffer.length; i++) {
+      mode = mode % 3;
       switch (mode) {
         case 0:
           // take the first 6 bit from the first byte
@@ -59,6 +59,7 @@ public class Base64 {
           // take the last 2 bit from prev byte
           // take first 4 bit from current byte
           f = (byte) (buffer[i - 1] & bitMask);
+          f = (byte) (f << 4); // promote bit pos
           g = (byte) (buffer[i] >> 4);
           bitMask = (byte) ((bitMask << 2) + 3); // set the last 4 bit
           mode += 1;
@@ -67,11 +68,12 @@ public class Base64 {
           // take the last 4 bit from prev byte 
           // and the first 2 byte of curr byte
           f = (byte) (buffer[i - 1] & bitMask);
+          f = (byte) (f << 2); //  promote bit pos
           g = (byte) (buffer[i] >> 6);
           bitMask = (byte) ((bitMask << 2) + 3);
           encodedString += Base64Map.byteToChar.get((byte) (f + g));
           // take the last 6 bit from curr byte
-          f = (byte) (buffer[i] >> 2);
+          f = (byte) (buffer[i] & bitMask);
           g = 0;
           bitMask = 3;
           mode = 0;
