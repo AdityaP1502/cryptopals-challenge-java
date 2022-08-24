@@ -13,11 +13,11 @@ public class SingleByteEncoder {
     return Hex.hexEncoder(buffTxt);
   }
 
-  public static String encrypt(char character, char key) {
+  public static char encrypt(char character, char key) {
     byte ascii = (byte) character;
     byte encryptKey = (byte) key;
     byte encryptMessage = (byte) (ascii ^ encryptKey);
-    return Hex.hexEncoder(encryptMessage);
+    return (char) encryptMessage;
   }
 
   public static char encrypt(byte ch, byte key) {
