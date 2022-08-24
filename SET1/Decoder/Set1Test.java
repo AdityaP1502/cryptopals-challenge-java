@@ -2,11 +2,12 @@ package SET1.Decoder;
 
 public class Set1Test {
   public static void main(String[] args) {
-    String s = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d";
-    String expected = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
-    String base64 = Hex.fromHexToBase64(s);
+    String text = "There is nothing to see here :)";
+    byte[] f = ASCII.convertTextToBytes(text);
+    String base64 = Base64.base64Encoder(f);
     System.out.println(base64);
-    System.out.println(base64.equals(expected));
+    text = ASCII.convertToText(Base64.fromBase64ToAscii(base64));
+    System.out.println(text);
   }
   
 }

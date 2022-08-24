@@ -7,9 +7,10 @@ public class RepeatingKeyEncoderTest {
     // System.out.println("Masukkan text:");
     // System.out.println("Masukkan key:");
     String text = "PPeanuts";
-    String key = "Peanuts";
+    String key = "Peanuts : XYZ";
     String encryptedMessage = RepeatingKeyEncoder.encrypt(text, key);
     System.out.println(encryptedMessage);
+    RepeatingKeyEncoder.encrypt("SET1/XOR/Encoder/message.txt", "SET1/XOR/Encoder/cipher.txt", key, "BASE64");
   }
   
 }
