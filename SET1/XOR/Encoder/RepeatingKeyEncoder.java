@@ -32,6 +32,7 @@ public class RepeatingKeyEncoder {
     // Save to different file
     File in = new File(inPath);
     File out = new File(outPath);
+    
     // temp var
     String f = "";
     byte[] g;
@@ -39,17 +40,19 @@ public class RepeatingKeyEncoder {
     try {
       Scanner sc = new Scanner(in);
       while (sc.hasNextLine()) {
-        f += sc.nextLine(); // Normal Text Encoding
+        f += sc.nextLine() +"\n"; // Normal Text Encoding
       }
       sc.close();
 
       f = encrypt(f , key);
       g = ASCII.convertTextToBytes(f);
+      out.createNewFile();
       FileWriter wr = new FileWriter(out);
       
       switch (encoding) {
-        case "Base64":
+        case "BASE64":
           f = ASCII.asciiToBase64(g);
+          break;
         case "HEX":
         default:
         f = ASCII.asciiToHex(g);
