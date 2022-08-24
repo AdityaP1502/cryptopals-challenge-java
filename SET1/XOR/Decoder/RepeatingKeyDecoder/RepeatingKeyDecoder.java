@@ -10,30 +10,32 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 import java.lang.Math;
 
+
 public class RepeatingKeyDecoder {
-  private int maxBlock = 4;
+  private int nBlock = 2;
   private int keyRangeMin = 2;
   private int keyRangeMax = 40;
   private String decryptedMessage;
-  private double[][] keys;
+  private List<Pair> keys = new ArrayList<>();
 
-  public RepeatingKeyDecoder(int keyRangeMax, int keyRangeMin, int maxBlock) {
+
+  public RepeatingKeyDecoder(int keyRangeMax, int keyRangeMin, int nBlock) {
     this.keyRangeMin = keyRangeMin;
     this.keyRangeMax = keyRangeMax;
-    this.maxBlock = maxBlock;
-    // for stroring key and it's hamming distance
-    keys = new double[(keyRangeMax - keyRangeMin) + 1][2];
+    this.nBlock = nBlock;
   }
 
 
   public byte[][] readBlocks(int SIZE, byte[] buffer) {
-    byte[][] blocks = new byte[maxBlock][SIZE];
-    for (int i = 0; i < maxBlock; i++) {
+    int totalBlocks = buffer.length / SIZE;
+    byte[][] blocks = new byte[totalBlocks][SIZE];
+    for (int i = 0; i < totalBlocks; i++) {
       for (int j = 0; j < SIZE; j++) {
         blocks[i][j] = buffer[i * SIZE + j];
       }
@@ -42,45 +44,34 @@ public class RepeatingKeyDecoder {
   }
 
   public byte[] readBase64(File file) {
-    int[] remainders = {0, 4, 2}; // valid remainder for all 6 multiples divide by 8
+    // int[] remainders = {0, 4, 2}; // valid remainder for all 6 multiples divide by 8
     byte[] bytes = null;
     try {
       Scanner sc = new Scanner(file);
       // length of base64 string needed to create n char depend on 8 * n mod 6
-      int cons = 8 * keyRangeMax * maxBlock; // Total needed character in the buffer
-      int remainder = (cons % 6) / 2;
-      int base64LengthString = (cons + remainders[remainder]) / 6;
+      // int cons = 8 * keyRangeMax * maxBlock; // Total needed character in the buffer
+      // int remainder = (cons % 6) / 2;
+      // int base64LengthString = (cons + remainders[remainder]) / 6;
       String base64String = "";
       // temp variable
       String s;
-      // counter
-      int i = 0;
-      while (sc.hasNextLine() && base64String.length() < base64LengthString) {
+      while (sc.hasNextLine()) {
         // Read content 
         s = sc.nextLine();
-        if (s.length() + base64String.length() <= base64LengthString) {
-          // Append all of the content
-          base64String += s;
-        } else {
-          i = 0;
-          // Append partial of the content
-          while (base64String.length() < base64LengthString) {
-            base64String += s.charAt(i);
-            i++;
-          }
-        }
+        // Append all of the content
+        base64String += s;
       }
       sc.close();
       return Base64.fromBase64ToAscii(base64String);
     } catch (FileNotFoundException e) {
-      e.getMessage();
+      System.out.println(e.getMessage());
       e.getStackTrace();
       System.exit(1);
       return bytes;
     }
   }
 
-  public static int hammingDistance(byte[] x ,byte[] y) {
+  public static int hammingDistance(byte[] x, byte[] y) {
     int distance = 0;
 
     // temp variables
@@ -110,24 +101,28 @@ public class RepeatingKeyDecoder {
   public int[] getPotentialKeys() {
     // Take about 4 keys with smallest distance
     int[] potentialKeys = new int[4];
+    double keyVal;
     // Sort keys based on their distance, and pick the first four element
-    Arrays.sort(keys, Comparator.comparingDouble(o -> o[1]));
+    Collections.sort(keys, Comparator.comparingDouble(o -> o.getB()));
     for (int i = 0; i < 4; i++) {
-      potentialKeys[i] = (int) (keys[i][0]);
+      keyVal = keys.get(i).getA();
+      potentialKeys[i] = (int) keyVal;
       System.out.println(potentialKeys[i]);
     }
     return potentialKeys;
   }
 
   public double averageDistanceBetweenBlocks(byte[][] blocks) {
-    // Average hamming distance between two blocks (for all combination)
-    int sumDistance = 0; 
+    // Find the distance between all the blocks 
+    int sumDistance = 0;
+    double averageDistance = 0.0;
+    double sumAverageDistance = 0.0;
     double totalCombination = 0;
     // temp variables
     byte[] f;
     byte[] g;
 
-    for (int j = 0; j < blocks.length; j++) {
+    for (int j = 0; j < nBlock; j++) {
       f = blocks[j];
       for (int k = j + 1; k < blocks.length; k++) {
         // Available combination => 2C4 = 6
@@ -135,8 +130,15 @@ public class RepeatingKeyDecoder {
         sumDistance += hammingDistance(f, g);
         totalCombination += 1;
       }
+      // calculate distance per block
+      averageDistance = sumDistance / totalCombination;
+      sumAverageDistance += averageDistance;
+      // reset counter
+      totalCombination = 0;
+      sumDistance = 0;
     }
-    return sumDistance / totalCombination;
+
+    return sumAverageDistance / nBlock;
   }
 
   public double normalizedDistance(double averageDistance, int keyLength) {
@@ -144,16 +146,27 @@ public class RepeatingKeyDecoder {
   }
 
   public void findKeyLength(byte[] buffer) {
-    int counter = 0;
     for (int i = keyRangeMin; i <= keyRangeMax; i++) {
+
+      if (buffer.length < i) {
+        // no need to search any furhter 
+        break;
+      }
+
       byte[][] blocks = readBlocks(i, buffer);
+      if (blocks.length == 1) {
+        // Can't create other block to test other than itself
+        break;
+      }
+
       double averageDistance = averageDistanceBetweenBlocks(blocks);
       double normalizedAverageDistance = normalizedDistance(averageDistance, i);
-      keys[counter][0] = i;
-      keys[counter][1] = normalizedAverageDistance;
-      counter++;
+
+      Pair pair = new Pair(i, normalizedAverageDistance);
+      keys.add(pair);
     }
   }
+
   public byte[][] transposeBlocks(byte[][] blocks) {
     // group by key value
     byte[][] transposeBlocks = new byte[blocks[0].length][blocks.length];
@@ -163,8 +176,8 @@ public class RepeatingKeyDecoder {
       }
     }
     return transposeBlocks;
-    
   }
+
   public byte[] decipherKey(int keyLength, byte[] buf) {
     byte[][] blocks = transposeBlocks(readBlocks(keyLength, buf));
     // Do Single - byte XOR Decoder on each blocks to find the char of the key
@@ -198,7 +211,7 @@ public class RepeatingKeyDecoder {
       counter++;
     }
   }
-
+  
   public void decrypt(File file, byte[] key, String filename) {
     // Decrypt file content using key and write it to a file
     try {
@@ -222,8 +235,8 @@ public class RepeatingKeyDecoder {
       wr.close();
       sc.close();
     } catch (IOException e) {
-      e.getMessage();
-      e.getStackTrace();
+      System.out.println(e.getMessage());
+      // e.getStackTrace();
       System.exit(-1);
     }
   }
