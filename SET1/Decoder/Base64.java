@@ -38,10 +38,10 @@ public class Base64 {
   }
   public static String base64Encoder(byte[] buffer) {
     // Encode binary data in base64 format
-    // Encode byte data in hex format
     Base64Map.setMap();
     String encodedString = "";
     int mode = 0;
+    int remainder = (buffer.length * 8) % 6;
     byte bitMask = 3; // only last two bit set to 1
     // temp var
     byte f = 0;
@@ -82,6 +82,15 @@ public class Base64 {
       encodedString += Base64Map.byteToChar.get((byte) (f + g));
     }
 
+    // handle leftoever bit
+    if (remainder > 0) {
+      // take the last bit
+      bitMask = (byte) (Math.pow(2, remainder) - 1);
+      f = (byte) (buffer[buffer.length - 1] & bitMask);
+      f = (byte) (f << (6 - remainder));
+      encodedString += Base64Map.byteToChar.get(f);
+    }
+
     return encodedString;
   }
   // COnverter
@@ -90,7 +99,7 @@ public class Base64 {
     byte[] buffer = Base64.base64Decoder(base64);
     // byte only have 6 use bit
     int mode = 0;
-    // int remainder = buffer.size() % 8;
+    // int remainder = buffer.length % 8;
     int length = (buffer.length * 6) / 8;
     byte[] bytes = new byte[length];
     int bitmask = 15; // The only bit that are set are the last 4 bits
@@ -139,11 +148,11 @@ public class Base64 {
       }
     }
     
-    // // handle for leftover bits
+    // handle for leftover bits
     // if (remainder > 0) {
-    //   // there are leftover bits -> either 2, 4, or 6
-    //   f = (byte) (buffer.get(buffer.size() - 1) << (6 - remainder));
-    //   bytes[length - 1] = f;
+      // // there are leftover bits -> either 2, 4, or 6
+      // f = (byte) (buffer[buffer.length - 1] << (6 - remainder));
+      // bytes[length - 1] = f;
     // }
 
     return bytes;
