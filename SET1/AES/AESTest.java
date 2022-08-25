@@ -1,4 +1,4 @@
-package SET1.AES.ECB;
+package SET1.AES;
 
 public class AESTest {
   public static void main(String[] args) {

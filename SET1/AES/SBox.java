@@ -1,4 +1,4 @@
-package SET1.AES.ECB;
+package SET1.AES;
 
 import SET1.Decoder.Hex;
 
@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class SBox {
   public static HashMap<Byte, Byte> sbox = new HashMap<>();
-  final public static String FILEPATH = "SET1/AES/ECB/table.txt";
+  final public static String FILEPATH = "SET1/AES/table.txt";
   private static boolean isSet = false;
 
   public static void setBox() {
@@ -23,7 +23,7 @@ public class SBox {
     
     File file = new File(FILEPATH);
     byte key = 0;
-    
+
     try (Scanner sc = new Scanner(file)) {
       while (sc.hasNextLine()) {
         temp = sc.nextLine();

@@ -1,4 +1,4 @@
-package SET1.AES.ECB;
+package SET1.AES;
 
 import SET1.Decoder.ASCII;
 
