@@ -23,12 +23,25 @@ public class Hex {
   // Hex Encoder and Decoder
   public static byte hexDecoder(char character) {
     // char in hex encoding
+    HexMap.setMap();
     return HexMap.charToByte.get(character); 
+  }
+
+  public static byte hexDecoder(char character1, char character2) {
+    // one byte is reprsented by two hex character
+    HexMap.setMap();
+    byte f;
+    byte x = HexMap.charToByte.get(character1);
+    byte y = HexMap.charToByte.get(character2);
+    x = (byte) (x << 4); // promote bit from 3 to 7
+    f = (byte) (x + y);
+    return f;
   }
 
   public static byte[] hexDecoder(String s) {
     // s is hex encoded
     // f is the byte data of the encoded message
+    // each byte consist of 4 bit of information
     HexMap.setMap();
     byte[] f = new byte[s.length()];
     for (int i = 0; i < s.length(); i++) {
