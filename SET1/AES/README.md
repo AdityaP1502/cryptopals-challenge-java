@@ -2,7 +2,6 @@
 Progress :
 1. Key Expansion : __Passed Testing__
 2. Round 
-</br>
 &ensp;&ensp;&ensp;&ensp;2.1. SubsBytes : __WIP__
 </br>
 &ensp;&ensp;&ensp;&ensp;2.2. ShiftRows : __WIP__
