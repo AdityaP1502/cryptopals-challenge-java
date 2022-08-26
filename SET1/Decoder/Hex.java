@@ -53,13 +53,20 @@ public class Hex {
   public static String hexEncoder(byte data) {
     // Encode one byte of data
     HexMap.setMap();
-    byte bitMask = 15; // Have all last 4 bit set
+
+    byte bitMask = 15; // Have all last 4 bit set to 1
     byte shifter = 4;
     String hex = "";
-    if (data > 15) {
+
+    if (data > 15 || data < 0) {
       // Decode the first 4 digit from the left
       byte temp = data;
+      // for byte that are < 0, shifting will create leading 1
+      // >> will promote temp to int, create a leading 1
+      // ex : 1000000 >> 4 -> (1111)1000
+      // bitmask with all first (shift amount) bit set to 0
       temp = (byte) (temp >> shifter);
+      temp = (byte) (temp & bitMask);
       hex += HexMap.byteToChar.get(temp);
     } else {
       hex += "0";
