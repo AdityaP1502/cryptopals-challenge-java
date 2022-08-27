@@ -16,25 +16,9 @@ public class AESKey {
     // System.out.println(Hex.hexEncoder(word));
   }
 
-  private static void SubWord(byte[] word) {
-    // sub word content with conetnt in sbox
-    SBox.setBox(); // set box
-    for (int i = 0; i < 4; i++) {
-      word[i] = SBox.sbox.get(word[i]);
-    }
-    // System.out.println(Hex.hexEncoder(word));
-  }
-
-  public static void XORWord(byte[] word1, byte[] word2) {
-    for (int i = 0; i < 4; i++) {
-      word1[i] = (byte) (word1[i] ^ word2[i]);
-    }
-    // System.out.println(Hex.hexEncoder(word1));
-  }
-
   private static void XORWithConstant(byte word[], int round) {
     byte[] rcon = {rc[round - 1], 0, 0, 0};
-    XORWord(word, rcon);
+    AESCipher.XORWord(word, rcon);
   }
 
   private static byte[] functionG(byte[] word, int round) {
@@ -42,7 +26,7 @@ public class AESKey {
     // Do RotWord
     rotWord(word_copy);
     // Do SubWord
-    SubWord(word_copy);
+    AESCipher.SubWord(word_copy);
     // Do XOR with round constant
     XORWithConstant(word_copy, round);
     return word_copy;
@@ -59,12 +43,12 @@ public class AESKey {
 
     // init step (W0)
     generatedWords[0] = functionG(words[3], round);
-    XORWord(generatedWords[0], words[0]);
+    AESCipher.XORWord(generatedWords[0], words[0]);
 
     // XOR prev generatedWords with words from prev round
     for (int i = 1; i < 4; i++) {
       generatedWords[i] = generatedWords[i - 1].clone();
-      XORWord(generatedWords[i], words[i]);
+      AESCipher.XORWord(generatedWords[i], words[i]);
     }
 
     return generatedWords;
