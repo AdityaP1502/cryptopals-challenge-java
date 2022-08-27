@@ -21,33 +21,43 @@ public class GaloisOperator {
     // b is elemnt from mixColumns transformation
     // b is either 1, 2, 3 (for encryption) and 9, 11, 13, 14 (for decryption)
     int res = 0;
-    switch (b) {
+    int f;
+    int bitmask = 255; // all 8 bit set to 1
+    switch (a) {
       case 1:
-        res = a;
+        res = b & bitmask;
         break;
       case 2:
-        res = (a << 1);
+        // conversion for byte with first bit set to 1
+        // to int make unneeded leading 1
+        f = b & bitmask;
+        res = (f << 1);
         break;
       case 3:
-        res = ((byte) (a << 1) ^ a);
+        f = b & bitmask;
+        res = ((f << 1) ^ f);
         break;
       case 9:
-        res = ((byte)  (a << 3) ^ a);
+        f = b & bitmask;
+        res = ((f << 3) ^ f);
         break;
       case 11:
-        res = (a << 2);
-        res = (res ^ a);
-        res = ((byte) (res << 1) ^ a);
+        f = b & bitmask;
+        res = (f << 2);
+        res = (res ^ f);
+        res = ((res << 1) ^ f);
         break;
       case 13:
-        res = ((byte) (a << 1) ^ a);
-        res = (a << 2);
-        res = (res ^ a);
+        f = b & bitmask;
+        res = ((f << 1) ^ f);
+        res = (f << 2);
+        res = (res ^ f);
         break;
       case 14:
-        res = ((byte) (a << 1) ^ a);
+        f = b & bitmask;
+        res = ((f << 1) ^ f);
         res = (res << 1);
-        res = ((byte) (res << 1) ^ a);
+        res = ((res << 1) ^ f);
         res = (res << 1);
         break;
     }
@@ -64,7 +74,7 @@ public class GaloisOperator {
 
     int m = 9; // irreducible bit length
     int n = bitLength(a); // a bit length (min length is 9)
-    int bitmask = 1 << n; //  to check whether bit at some pos is 0
+    int bitmask = 1 << (n - 1); //  to check whether bit at some pos is 0
     magicNumber = magicNumber << (n - 9); // promote magic number to have the same bit pos as a
 
     for (int i = 0; i <= (n - m); i++) {
