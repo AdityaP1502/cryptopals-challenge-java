@@ -50,14 +50,13 @@ public class GaloisOperator {
       case 13:
         f = b & bitmask;
         res = ((f << 1) ^ f);
-        res = (f << 2);
+        res = (res << 2);
         res = (res ^ f);
         break;
       case 14:
         f = b & bitmask;
         res = ((f << 1) ^ f);
-        res = (res << 1);
-        res = ((res << 1) ^ f);
+        res = (res << 1) ^ f;
         res = (res << 1);
         break;
     }
@@ -83,6 +82,7 @@ public class GaloisOperator {
         a = a ^ magicNumber;
       }
       magicNumber = magicNumber >> 1; // move 1 position to the right
+      bitmask = bitmask >> 1;
     }
 
     // a is guarenteed to be in GF(2^8) -> only use 8 bit
