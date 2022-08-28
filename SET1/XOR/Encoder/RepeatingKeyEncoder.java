@@ -1,7 +1,7 @@
 package SET1.XOR.Encoder;
 import java.util.Scanner;
 
-import SET1.Decoder.ASCII;
+import Encoding.ASCII;
 
 import java.io.File;
 import java.io.FileWriter;

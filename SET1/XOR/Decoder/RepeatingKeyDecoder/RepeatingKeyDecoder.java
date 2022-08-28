@@ -1,7 +1,5 @@
 package SET1.XOR.Decoder.RepeatingKeyDecoder;
 
-import SET1.Decoder.ASCII;
-import SET1.Decoder.Base64;
 import SET1.XOR.Decoder.SingleByteDecoder.SingleByteDecoder;
 import SET1.XOR.Encoder.RepeatingKeyEncoder;
 
@@ -14,6 +12,10 @@ import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
+
+import Encoding.ASCII;
+import Encoding.Base64;
+
 import java.lang.Math;
 
 

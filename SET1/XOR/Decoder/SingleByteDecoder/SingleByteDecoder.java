@@ -1,8 +1,8 @@
 package SET1.XOR.Decoder.SingleByteDecoder;
-import SET1.Decoder.ASCII;
-import SET1.Decoder.Hex;
-
 import java.util.HashMap;
+
+import Encoding.ASCII;
+import Encoding.Hex;
 
 
 public class SingleByteDecoder {

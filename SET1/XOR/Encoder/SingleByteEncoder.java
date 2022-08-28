@@ -1,7 +1,7 @@
 package SET1.XOR.Encoder;
 
-import SET1.Decoder.ASCII;
-import SET1.Decoder.Hex;
+import Encoding.ASCII;
+import Encoding.Hex;
 
 public class SingleByteEncoder {
   public static String encrypt(String text, char key) {

@@ -1,7 +1,7 @@
 package SET1.XOR.Decoder.RepeatingKeyDecoder;
 
-import java.io.File;
-import SET1.Decoder.ASCII;
+// import java.io.File;
+// import SET1.Decoder.ASCII;
 
 public class XORDecoderTest {
   public static void main(String[] args) {

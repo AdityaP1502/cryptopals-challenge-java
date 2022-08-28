@@ -1,5 +1,5 @@
 package SET1.XOR;
-import SET1.Decoder.Hex;
+import Encoding.Hex;
 
 public class XOR {
   public static String XORCombination(String hex1, String hex2) {
