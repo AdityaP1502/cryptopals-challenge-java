@@ -1,4 +1,4 @@
-package SET1.Decoder;
+package Encoding;
 // import java.util.ArrayList;
 public class Hex {
   // public static ArrayList<Byte> hexDecoder(String s) {

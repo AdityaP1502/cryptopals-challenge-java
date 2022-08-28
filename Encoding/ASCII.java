@@ -1,4 +1,4 @@
-package SET1.Decoder;
+package Encoding;
 public class ASCII {
   public static byte[] convertTextToBytes(String text) {
     byte[] buffer = new byte[text.length()];

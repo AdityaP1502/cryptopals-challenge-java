@@ -1,4 +1,4 @@
-package SET1.Decoder;
+package Encoding;
 
 public class Base64 {
   // Decoder and Encoder

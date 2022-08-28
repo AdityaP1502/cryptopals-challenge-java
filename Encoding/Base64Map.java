@@ -1,4 +1,4 @@
-package SET1.Decoder;
+package Encoding;
 import java.util.HashMap;
 public class Base64Map {
   static boolean hasSet = false;
