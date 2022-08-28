@@ -1,74 +1,50 @@
 package SET1.AES;
 
-import SET1.Decoder.ASCII;
+import Encoding.ASCII;
 // import SET1.Decoder.Hex;
 public class AESKey {
   private static byte[] rc = {1, 2, 4, 8, 16, 32, 64, -128, 27, 54};
 
-  private static void rotWord(byte[] word) {
-    byte temp = word[0];
-    // move i -> i - 1
-    for (int i = 1; i < 4; i++) {
-      word[i - 1] = word[i];
-    }
-    // 0 move to the end
-    word[3] = temp;
-    // System.out.println(Hex.hexEncoder(word));
-  }
 
-  private static void XORWithConstant(byte word[], int round) {
+  private static void XORWithConstant(Words generatedWords, int round) {
     byte[] rcon = {rc[round - 1], 0, 0, 0};
-    AESCipher.XORWord(word, rcon);
+    Words.XORWord(generatedWords.words[0], rcon);
   }
 
-  private static byte[] functionG(byte[] word, int round) {
-    byte[] word_copy = word.clone();
-    // Do RotWord
-    rotWord(word_copy);
+  private static void functionG(Words generatedWords, int round) {
+    // Do RotWord 
+    generatedWords.colmShifterOne(0);
     // Do SubWord
-    AESCipher.SubWord(word_copy);
+    generatedWords.SubWord(0, 0);
     // Do XOR with round constant
-    XORWithConstant(word_copy, round);
-    return word_copy;
+    XORWithConstant(generatedWords, round);
   }
 
-  public static byte[][] getWords(String key) throws InvalidBlockSizeException {
+  public static Words getWords(String key) throws InvalidBlockSizeException {
     // for getting subkey 0
-    return changeKeyToWord(key);
+    return new Words(ASCII.convertTextToBytes(key));
   }
 
-  public static byte[][] getWords(byte[][] words, int round) {
+  public static Words getWords(Words words, int round) {
     // words consitst of 4 word (1 word = 1 bytes
-    byte[][] generatedWords = new byte[4][4];
+    Words generatedWords = new Words();
 
     // init step (W0)
-    generatedWords[0] = functionG(words[3], round);
-    AESCipher.XORWord(generatedWords[0], words[0]);
+    generatedWords.words[0] = words.words[3].clone();
+    functionG(generatedWords, round);
+    Words.XORWord(generatedWords, words, 0);
+    // AESCipher.XORWord(generatedWords[0], words[0]);
 
     // XOR prev generatedWords with words from prev round
     for (int i = 1; i < 4; i++) {
-      generatedWords[i] = generatedWords[i - 1].clone();
-      AESCipher.XORWord(generatedWords[i], words[i]);
+      // generatedWords[i] = generatedWords[i - 1].clone();
+      // AESCipher.XORWord(generatedWords[i], words[i]);
+      generatedWords.words[i] = generatedWords.words[i - 1].clone();
+      Words.XORWord(generatedWords, words, i);
     }
 
     return generatedWords;
   }
   
-  public static byte[][] changeKeyToWord(String key) throws InvalidBlockSizeException{
-    // key must be 128 bit
-    byte[] keyInBytes = ASCII.convertTextToBytes(key);
-    if (keyInBytes.length < 16) {
-      throw new InvalidBlockSizeException("Key must have 128 bit length or 16 bytes");
-    }
-
-    byte[][] words = new byte[4][4];
-    // one row = one word, 
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 4; j++ ){
-        words[i][j] = keyInBytes[4 * i + j];
-      }
-    }
-
-    return words;
-  }
+  
 }
