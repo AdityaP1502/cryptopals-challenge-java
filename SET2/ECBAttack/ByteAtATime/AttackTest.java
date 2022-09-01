@@ -1,4 +1,4 @@
-package SET2.ECBAttack;
+package SET2.ECBAttack.ByteAtATime;
 
 public class AttackTest {
   public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package SET2.ECBAttack;
+package SET2.ECBAttack.ByteAtATime;
 
 public class PrefixTest {
   public static void main(String[] args) {
