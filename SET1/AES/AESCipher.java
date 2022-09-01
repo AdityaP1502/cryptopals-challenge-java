@@ -1,8 +1,5 @@
 package SET1.AES;
 
-import Encoding.ASCII;
-
-
 public class AESCipher {
   // Implement 128 bit AES Encryption and Decryption
   private static void round(Words key, Words message, int round, int mode) {
@@ -35,9 +32,8 @@ public class AESCipher {
     }
   }
   
-  public static String encrypt(String text, String key) throws InvalidBlockSizeException {
-    byte[] block = ASCII.convertTextToBytes(text);
-
+  public static String encrypt(byte[] block, String key) throws InvalidBlockSizeException {
+    // byte[] block = ASCII.convertTextToBytes(text);
     if (block.length < 16) {
       throw new InvalidBlockSizeException("Block must have size of 128 bits or 16 bytes");
     }
