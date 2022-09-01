@@ -127,7 +127,7 @@ public class SingleByteDecoder {
     this.maxScore = maxScore;
     System.out.println(maxScore);
     this.key = theKey;
-    this.decryptedMessage = ASCII.convertToText(result);
+    this.decryptedMessage = ASCII.ASCIIDecoder(result);
   }
 
   public double getMaxScore() {

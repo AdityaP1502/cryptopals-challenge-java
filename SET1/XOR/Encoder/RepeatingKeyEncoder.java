@@ -45,7 +45,7 @@ public class RepeatingKeyEncoder {
       sc.close();
 
       f = encrypt(f , key);
-      g = ASCII.convertTextToBytes(f);
+      g = ASCII.ASCIIEncoder(f);
       out.createNewFile();
       FileWriter wr = new FileWriter(out);
       

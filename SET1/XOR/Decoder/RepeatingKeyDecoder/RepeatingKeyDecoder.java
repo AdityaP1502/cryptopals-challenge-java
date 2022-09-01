@@ -95,8 +95,8 @@ public class RepeatingKeyDecoder {
   }
 
   public static int hammingDistance(String x, String y) {
-    byte[] xBuff = ASCII.convertTextToBytes(x);
-    byte[] yBuff = ASCII.convertTextToBytes(y);
+    byte[] xBuff = ASCII.ASCIIEncoder(x);
+    byte[] yBuff = ASCII.ASCIIEncoder(y);
     return hammingDistance(xBuff, yBuff);
   }
 
@@ -208,7 +208,7 @@ public class RepeatingKeyDecoder {
     
     // find all possible result
     for (byte[] key : potentialKeysBytes) {
-      System.out.println(ASCII.convertToText(key));
+      System.out.println(ASCII.ASCIIDecoder(key));
       decrypt(file, key, Integer.toString(counter));
       counter++;
     }

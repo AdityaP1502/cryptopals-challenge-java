@@ -5,7 +5,7 @@ import Encoding.Hex;
 
 public class SingleByteEncoder {
   public static String encrypt(String text, char key) {
-    byte[] buffTxt = ASCII.convertTextToBytes(text);
+    byte[] buffTxt = ASCII.ASCIIEncoder(text);
     byte encryptKey = (byte) key;
     for (int i = 0; i < buffTxt.length; i++) {
       buffTxt[i] = (byte) (buffTxt[i] ^ encryptKey);
