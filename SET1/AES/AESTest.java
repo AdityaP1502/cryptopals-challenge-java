@@ -25,13 +25,14 @@ public class AESTest {
     String temp;
 
     String key = "YELLOW SUBMARINE";
-    System.out.println("Key in hex: " + Hex.hexEncoder(ASCII.convertTextToBytes(key)));
+    System.out.println("Key in hex: " + Hex.hexEncoder(ASCII.ASCIIEncoder(key)));
     String message = "I Am Aditya PPPP";
-    System.out.println("message in hex: " + Hex.hexEncoder(ASCII.convertTextToBytes(message)));
+    System.out.println("message in hex: " + Hex.hexEncoder(ASCII.ASCIIEncoder(message)));
 
     try {
       // encrypt file
-      temp = AESCipher.encrypt(message, key);
+      byte[] messageBlock = ASCII.ASCIIEncoder(message);
+      temp = AESCipher.encrypt(messageBlock, key);
       wr.write(temp);
       wr.close();
 
