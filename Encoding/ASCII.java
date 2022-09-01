@@ -1,6 +1,6 @@
 package Encoding;
 public class ASCII {
-  public static byte[] convertTextToBytes(String text) {
+  public static byte[] ASCIIEncoder(String text) {
     byte[] buffer = new byte[text.length()];
     for (int i = 0; i < text.length(); i++) {
       buffer[i] = (byte) text.charAt(i);
@@ -8,7 +8,7 @@ public class ASCII {
     return buffer;
   }
 
-  public static String convertToText(byte[] buffer){
+  public static String ASCIIDecoder(byte[] buffer){
     String text = "";
     for (byte x : buffer){
       text += (char) x;
