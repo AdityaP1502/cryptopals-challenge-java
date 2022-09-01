@@ -1,6 +1,10 @@
 package SET1.AES;
 
 import Encoding.ASCII;
+import Encoding.EncodingFormat;
+import Encoding.UnrecognizedEncodingException;
+
+import java.util.Random;
 // import SET1.Decoder.Hex;
 public class AESKey {
   private static byte[] rc = {1, 2, 4, 8, 16, 32, 64, -128, 27, 54};
@@ -22,7 +26,7 @@ public class AESKey {
 
   public static Words getWords(String key) throws InvalidBlockSizeException {
     // for getting subkey 0
-    return new Words(ASCII.convertTextToBytes(key));
+    return new Words(ASCII.ASCIIEncoder(key));
   }
 
   public static Words getWords(Words words, int round) {
@@ -46,5 +50,17 @@ public class AESKey {
     return generatedWords;
   }
   
-  
+  public static String generateRandomKey(String encoding) throws UnrecognizedEncodingException {
+    // key consist of 16 bytes
+    Random rnd = new Random();
+    byte[] bytes = new byte[16];
+
+    for (int i = 0; i < 16; i++) {
+      rnd.nextBytes(bytes);
+    }
+
+    // convert bytes into string 
+    return EncodingFormat.fromBytesToText(bytes, encoding);
+
+  }
 }
