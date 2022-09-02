@@ -7,10 +7,10 @@ import Encoding.Base64;
 import Encoding.EncodingFormat;
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
-import SET1.AES.AESKey;
 import SET1.AES.CBC.CBC;
 import SET1.AES.ECB.DetectECB;
 import SET1.AES.ECB.ECB;
+import SET2.ECBAttack.CutAndPaste.Parser;
 
 public class EncryptionOracle {
   final static String unknownString = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK";
@@ -69,30 +69,52 @@ public class EncryptionOracle {
     // text = input || secret
     String message = PREFIX + input;
     return encryptECB(message, "ASCII", DEFAULT_KEY);
-    
   } 
 
-  public static String encrypt(String text, String encoding) throws UnrecognizedEncodingException {
-    String encryptedString;
-    String key = AESKey.generateRandomKey("ASCII");
-    Random rnd = new Random();
+  public static String[] encyptCBC(String input) {
+    String[] res = new String[2];
+    // input is assumed to used ASCII
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
 
-    if (rnd.nextBoolean()) {
-      // do ecb
-      ECB ecb = new ECB(text, key, encoding);
-      encryptedString = ecb.encrypt("HEX");
-    } else {
-      // do cbc
-      String IV = AESKey.generateRandomKey("HEX");
-      CBC CBC = new CBC(text, key, IV, encoding);
-      encryptedString = CBC.encrypt();
-    }
-    // // do ecb
-    // System.out.println("ECB");
-    // ECB ecb = new ECB(text, key, encoding);
-    // encryptedString = ecb.encrypt("HEX");
-    return encryptedString;
+    // prefix and suffix message
+    String prefix = "comment1=cooking%20MCs;userdata=";
+    String suffix = ";comment2=%20like%20a%20pound%20of%20bacon";
+
+    // sanitize user input
+    input = Parser.sanitizeInput(input);
+    String message = prefix + input + suffix;
+
+    // encrypt
+    String IV = "1f265dfcef538e67a3c71230ec4c72cb";
+    // CBC cbc = new CBC(message, keyInASCII, "ASCII");
+    CBC cbc = new CBC(message, keyInASCII, IV, "ASCII");
+    res[0] = cbc.encrypt();
+    res[1] = cbc.getIV();
+
+    return res;
   }
+  
+  // public static String encrypt(String text, String encoding) throws UnrecognizedEncodingException {
+    // String encryptedString;
+    // String key = AESKey.generateRandomKey("ASCII");
+    // Random rnd = new Random();
+
+    // if (rnd.nextBoolean()) {
+      // // do ecb
+      // ECB ecb = new ECB(text, key, encoding);
+      // encryptedString = ecb.encrypt("HEX");
+    // } else {
+      // // do cbc
+      // String IV = AESKey.generateRandomKey("HEX");
+      // CBC CBC = new CBC(text, key, IV, encoding);
+      // encryptedString = CBC.encrypt();
+    // }
+    // // // do ecb
+    // // System.out.println("ECB");
+    // // ECB ecb = new ECB(text, key, encoding);
+    // // encryptedString = ecb.encrypt("HEX");
+    // return encryptedString;
+  // }
 
   public static String check(String text) {
     String x = DetectECB.detect(text);
