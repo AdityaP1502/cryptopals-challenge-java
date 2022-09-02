@@ -14,7 +14,7 @@ public class User {
   private static String key;
 
   public User(String email) {
-    this.email = email;
+    this.email = Parser.sanitizeInput(email);
     uid = 10;
     role = Roles.USER.toString();
     try {
@@ -73,5 +73,10 @@ public class User {
     int uid = Integer.parseInt(strings[1].split("=", 2)[1]);
     String role = strings[2].split("=", 2)[1];
     return new User(email, uid, role);
+  }
+
+  public static String createNewUser(String email) {
+    User newUser = new User(email);
+    return newUser.send();
   }
 }
