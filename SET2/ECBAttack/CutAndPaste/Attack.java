@@ -36,7 +36,6 @@ public class Attack {
     // append random yyy to pad the text
     String goToAdminCipherText;
     String adminCipherText;
-    User adminUser;
 
     String admin = Roles.ADMIN.toString();
     int padLength = blockSize - admin.length();
@@ -55,11 +54,9 @@ public class Attack {
     }
     email += "@gmail.com";
     // admin ciphertext at the second block
-    adminUser = new User(email);
-    goToAdminCipherText = adminUser.send();
+    goToAdminCipherText = User.createNewUser(email);
     adminCipherText = goToAdminCipherText.substring(blockSize * 2, blockSize * 4);
     goToAdminCipherText = goToAdminCipherText.substring(0, goToAdminCipherText.length() - (blockSize * 2)) + adminCipherText;
     return goToAdminCipherText;
-
   }
 }
