@@ -1,4 +1,4 @@
-package SET1.AES.Padding;
+package AES.Padding;
 
 public class PKCSTest {
   public static void main(String[] args) {

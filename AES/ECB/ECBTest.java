@@ -1,34 +1,30 @@
-package SET1.AES.ECB;
+package AES.ECB;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-
-public class DetectECBTest {
+public class ECBTest {
   public static void main(String[] args) {
-    String filepath = "SET1/AES/ECB/hex.txt";
-    String filepathOut = "SET1/AES/ECB/detectedECB.txt";
+    String filepath = "SET1/AES/ECB/message.txt";
+    String filepathOut = "SET1/AES/ECB/plaintext.txt";
+    File file = new File(filepath);
+    File fileOut = new File(filepathOut);
     String temp = "";
-
+    String KEY = "YELLOW SUBMARINE";
     try {
-      File file = new File(filepath);
-      File fileOut = new File(filepathOut);
-      fileOut.createNewFile();
-
       Scanner sc = new Scanner(file);
       while (sc.hasNextLine()) {
         temp += sc.nextLine();
       }
+      ECB ecb = new ECB(temp, KEY, "BASE64");
       sc.close();
-
-      String detectedECB = DetectECB.detect(temp);
-
       // Write result into a file
       FileWriter wr = new FileWriter(fileOut);
-      wr.write(detectedECB);
+      wr.write(ecb.decrypt("ASCII"));
       wr.close();
+
     } catch (IOException e) {
       e.printStackTrace();
     }

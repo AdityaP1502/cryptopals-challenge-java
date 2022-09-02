@@ -1,4 +1,4 @@
-package SET1.AES;
+package AES;
 
 public class InvalidBlockSizeException extends Exception {
   InvalidBlockSizeException(String message) {

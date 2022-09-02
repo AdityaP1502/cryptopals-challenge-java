@@ -1,4 +1,4 @@
-package SET1.AES.CBC;
+package AES.CBC;
 
 import java.util.Scanner;
 

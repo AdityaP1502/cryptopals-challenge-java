@@ -1,14 +1,13 @@
-package SET1.AES.CBC;
+package AES.CBC;
 
 import java.util.Random;
 
+import AES.AESCipher;
+import AES.InvalidBlockSizeException;
+import AES.Words;
+import AES.Padding.PKCS;
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
-
-import SET1.AES.AESCipher;
-import SET1.AES.InvalidBlockSizeException;
-import SET1.AES.Words;
-import SET1.AES.Padding.PKCS;
 
 public class CBC {
   private String IV;

@@ -1,4 +1,4 @@
-package SET1.AES;
+package AES;
 
 import java.util.HashMap;
 import java.io.File;

@@ -1,4 +1,4 @@
-package SET1.AES;
+package AES;
 
 import static java.lang.Math.pow;
 

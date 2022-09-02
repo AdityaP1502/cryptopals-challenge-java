@@ -1,4 +1,4 @@
-package SET1.AES.ECB;
+package AES.ECB;
 
 import java.util.HashMap;
 

@@ -1,12 +1,12 @@
-package SET1.AES.CBC;
+package AES.CBC;
 
+import AES.AESCipher;
+import AES.InvalidBlockSizeException;
+import AES.Words;
 import Encoding.ASCII;
 import Encoding.EncodingFormat;
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
-import SET1.AES.AESCipher;
-import SET1.AES.InvalidBlockSizeException;
-import SET1.AES.Words;
 
 public class CBCTest2 {
   public static void main(String[] args) throws UnrecognizedEncodingException, InvalidBlockSizeException {

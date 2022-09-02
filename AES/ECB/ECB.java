@@ -1,11 +1,11 @@
-package SET1.AES.ECB;
+package AES.ECB;
 
+import AES.AESCipher;
+import AES.InvalidBlockSizeException;
+import AES.Padding.PKCS;
 import Encoding.EncodingFormat;
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
-import SET1.AES.AESCipher;
-import SET1.AES.InvalidBlockSizeException;
-import SET1.AES.Padding.PKCS;
 
 public class ECB {
   private final byte[][] BLOCKS;

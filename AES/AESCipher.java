@@ -1,4 +1,4 @@
-package SET1.AES;
+package AES;
 
 public class AESCipher {
   // Implement 128 bit AES Encryption and Decryption
