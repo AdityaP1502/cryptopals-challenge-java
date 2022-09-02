@@ -11,11 +11,11 @@ import java.io.IOException;
 
 public class CBCTest {
   public static void main(String[] args) {
-    String filepath = "SET1/AES/CBC/message.txt";
+    // String filepath = "SET1/AES/CBC/message.txt";
     String filepathOut = "SET1/AES/CBC/ciphertext.txt";
     String filepathDecrypted = "SET1/AES/CBC/plaintext.txt";
 
-    File file = new File(filepath);
+    // File file = new File(filepath);
     File fileOut = new File(filepathOut);
     File fileDecrypted = new File(filepathDecrypted);
     
