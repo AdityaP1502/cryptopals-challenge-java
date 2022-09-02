@@ -1,7 +1,7 @@
 package SET2.CBCAttack.BitFlipping;
 
-import SET1.AES.CBC.CBC;
 import Encoding.Hex;
+import AES.CBC.CBC;
 import Encoding.ASCII;
 
 public class Validator {

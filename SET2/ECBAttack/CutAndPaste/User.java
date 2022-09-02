@@ -1,10 +1,10 @@
 package SET2.ECBAttack.CutAndPaste;
 
+import AES.AESKey;
+import AES.ECB.ECB;
 import Encoding.ASCII;
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
-import SET1.AES.AESKey;
-import SET1.AES.ECB.ECB;
 import SET2.EncryptionOracle.EncryptionOracle;
 
 public class User {

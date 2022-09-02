@@ -2,14 +2,14 @@ package SET2.EncryptionOracle;
 
 import java.util.Random;
 
+import AES.CBC.CBC;
+import AES.ECB.DetectECB;
+import AES.ECB.ECB;
 import Encoding.ASCII;
 import Encoding.Base64;
 import Encoding.EncodingFormat;
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
-import SET1.AES.CBC.CBC;
-import SET1.AES.ECB.DetectECB;
-import SET1.AES.ECB.ECB;
 import SET2.ECBAttack.CutAndPaste.Parser;
 
 public class EncryptionOracle {
