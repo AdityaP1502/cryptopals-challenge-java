@@ -61,14 +61,14 @@ public class Words {
     }
   }
 
-  public static void XORWord(byte[] word1, byte[] word2) {
-    for (int i = 0; i < 4; i++) {
+  public static void XOR(byte[] word1, byte[] word2) {
+    for (int i = 0; i < word1.length; i++) {
       word1[i] = (byte) (word1[i] ^ word2[i]);
     }
   }
 
   public static void XORWord(Words words1, Words words2, int row) {
-    XORWord(words1.words[row], words2.words[row]);
+    XOR(words1.words[row], words2.words[row]);
   }
 
   public void XORWords(Words words2) {
