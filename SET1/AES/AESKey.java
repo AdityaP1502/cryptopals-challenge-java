@@ -12,7 +12,7 @@ public class AESKey {
 
   private static void XORWithConstant(Words generatedWords, int round) {
     byte[] rcon = {rc[round - 1], 0, 0, 0};
-    Words.XORWord(generatedWords.words[0], rcon);
+    Words.XOR(generatedWords.words[0], rcon);
   }
 
   private static void functionG(Words generatedWords, int round) {
