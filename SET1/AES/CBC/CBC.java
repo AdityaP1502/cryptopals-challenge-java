@@ -1,5 +1,7 @@
 package SET1.AES.CBC;
 
+import java.util.Random;
+
 import Encoding.Hex;
 import Encoding.UnrecognizedEncodingException;
 
@@ -13,6 +15,20 @@ public class CBC {
   private String KEY;
   private String processedString;
   private byte[][] BLOCKS;
+
+  public CBC(String text, String key, String IV, String encoding) {
+    this.KEY = key;
+    this.IV = IV;
+    // change text into bytes
+    BLOCKS = toBlocks(text, encoding);
+  }
+
+  public CBC(String text, String key, String encoding) {
+    KEY = key;
+    setRandomIV();
+    // change text into bytes
+    BLOCKS = toBlocks(text, encoding);
+  }
 
   public byte[][] toBlocks(String text, String encoding) {
     int length, remainder;
@@ -35,8 +51,7 @@ public class CBC {
         block[i] = temp[i];
       }
       // Padding
-      PKCS.pad(block, 16 - remainder);
-
+      if (remainder > 0) PKCS.pad(block, 16 - remainder);
       blocks = new byte[block.length / 16][16];
       for (int i = 0; i < blocks.length; i++) {
         for (int j = 0; j < 16; j++) {
@@ -51,11 +66,16 @@ public class CBC {
     return blocks;
   }
 
-  public CBC(String text, String key, String IV, String encoding) {
-    this.KEY = key;
-    this.IV = IV;
-    // change text into bytes
-    BLOCKS = toBlocks(text, encoding);
+
+  public void  setRandomIV() {
+    Random rnd = new Random();
+    byte[] bytesIV = new byte[16];
+
+    for (int i = 0; i < 16; i++) {
+      rnd.nextBytes(bytesIV);
+    }
+
+    IV = Hex.hexEncoder(bytesIV);
   }
 
   public void process(int mode) {
@@ -67,8 +87,9 @@ public class CBC {
     for (int i = 0; i < totalBlock; i++) {
       try {
         if (mode == 0) {
-          // Encryptoin
-          Words.XORWord(BLOCKS[i], lastCipherText);
+          // Encryption
+          Words.XOR(BLOCKS[i], lastCipherText);
+          // System.out.println(Hex.hexEncoder(BLOCKS[i]));
           f = AESCipher.encrypt(BLOCKS[i], KEY).replace(" ", "");
           processedString += f;
           lastCipherText = Hex.fromHexToAscii(f);
@@ -80,7 +101,7 @@ public class CBC {
           // Convert to bytes
           g = Hex.fromHexToAscii(f);
           // Do XOR
-          Words.XORWord(g, lastCipherText);
+          Words.XOR(g, lastCipherText);
           // Convert back to hex
           f = Hex.hexEncoder(g);
 
@@ -102,5 +123,9 @@ public class CBC {
   public String decrypt() {
     process(1);
     return processedString;
+  }
+
+  public String getIV() {
+    return IV;
   }
 }
