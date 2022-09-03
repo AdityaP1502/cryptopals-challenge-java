@@ -7,7 +7,7 @@ import SET2.EncryptionOracle.EncryptionOracle;
 public class BitFlipAttack {
   public boolean attack() {
     int cipherBlockSize = 16; // in bytes
-    String input = "XXXXXXXXXXXXXXXXXXXX;dmi=rue";
+    String input = "XXXXXXXXXXXXXXXXXXXX;dmi=rue;abcdefghij";
     // input will be sanitized into 
 
     // XXXXXXXXXXXXXXXX    XXXX';'dmi'='rue
