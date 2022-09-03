@@ -9,8 +9,8 @@ import Encoding.Hex;
 
 public class SBox {
   public static HashMap<Byte, Byte> sbox = new HashMap<>();
-  final public static String FILEPATH = "SET1/AES/table.txt";
-  final public static String FILEPATH_REVERSE = "SET1/AES/table_reverse.txt";  
+  final public static String FILEPATH = "AES/table.txt";
+  final public static String FILEPATH_REVERSE = "AES/table_reverse.txt";  
   private static boolean isSet = false;
   private static int lastState = -1;
 
