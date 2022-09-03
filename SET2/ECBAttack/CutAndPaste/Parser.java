@@ -1,29 +1,26 @@
 package SET2.ECBAttack.CutAndPaste;
 
 public class Parser {
-  public static String sanitizeInput(String input) {
-    // remove & and =
+  public static String quoteMetaChar(String input, char meteChar) {
     int x;
+    int startIdx = 0;
     String quoteMeta;
-    StringBuilder temp = new StringBuilder(input);
-    while ((x = temp.indexOf("&"))!= -1) {
+    while ((x = input.indexOf(meteChar, startIdx))!= -1) {
       // quote
       // & -> '&'
-      temp.deleteCharAt(x);
-      quoteMeta = "\'" + "&" + "\'";
+      quoteMeta = "\'" + meteChar + "\'";
       input = input.substring(0, x) + quoteMeta + input.substring(x + 1, input.length());
+      startIdx = x + 2;
     }
 
-    while ((x = temp.indexOf("="))!= -1) {
-      temp.deleteCharAt(x);
-      quoteMeta = "\'" + "=" + "\'";
-      input = input.substring(0, x) + quoteMeta + input.substring(x + 1, input.length());
-    }
+    return input;
+  }
+  public static String sanitizeInput(String input) {
+    // remove & and =
+    char[] meteChars = {'&', '=', ';'};
 
-    while ((x = temp.indexOf(";"))!= -1) {
-      temp.deleteCharAt(x);
-      quoteMeta = "\'" + ";" + "\'";
-      input = input.substring(0, x) + quoteMeta + input.substring(x + 1, input.length());
+    for (char x : meteChars) {
+      input = quoteMetaChar(input, x);
     }
 
     return input;
