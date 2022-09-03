@@ -9,7 +9,7 @@ public class Validator {
 
   public static boolean validate(String decryptedMessage, String IV) {
     String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
-    CBC cbc = new CBC(decryptedMessage, keyInASCII, IV, "HEX");
+    CBC cbc = new CBC(decryptedMessage, keyInASCII, IV, "HEX", 1);
     String plaintextHex = cbc.decrypt(); // in hex
 
     // convert to ascii
