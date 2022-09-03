@@ -47,20 +47,20 @@ public class EncryptionOracle {
     // String unknownStringDecoded = "AAAABBBBCCCCDDDD"; 
     text += unknownStringDecoded;
 
-    ECB ecb = new ECB(text, keyInASCII, encoding);
-    return ecb.encrypt("HEX");
+    ECB ecb = new ECB(text, keyInASCII, encoding, 0);
+    return ecb.encrypt();
   }
 
   public static String encryptECB(String text, String encoding, String key) {
     // key in hex
     String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(key));
     
-    String unknownStringDecoded = ASCII.ASCIIDecoder(Base64.fromBase64ToAscii(unknownString));
-    // String unknownStringDecoded = "AAAABBBBCCCCDDDD"; 
-    text += unknownStringDecoded;
+    // String unknownStringDecoded = ASCII.ASCIIDecoder(Base64.fromBase64ToAscii(unknownString));
+    // // String unknownStringDecoded = "AAAABBBBCCCCDDDD"; 
+    // text += unknownStringDecoded;
 
-    ECB ecb = new ECB(text, keyInASCII, encoding);
-    return ecb.encrypt("HEX");
+    ECB ecb = new ECB(text, keyInASCII, encoding, 0);
+    return ecb.encrypt();
   }
 
   public static String encryptECBWithPrefix(String input, String encoding) {
@@ -70,7 +70,7 @@ public class EncryptionOracle {
     String message = PREFIX + input;
     return encryptECB(message, "ASCII", DEFAULT_KEY);
   } 
-
+  
   public static String[] encyptCBC(String input) {
     String[] res = new String[2];
     // input is assumed to used ASCII
@@ -87,7 +87,7 @@ public class EncryptionOracle {
     // encrypt
     String IV = "1f265dfcef538e67a3c71230ec4c72cb";
     // CBC cbc = new CBC(message, keyInASCII, "ASCII");
-    CBC cbc = new CBC(message, keyInASCII, IV, "ASCII");
+    CBC cbc = new CBC(message, keyInASCII, IV, "ASCII", 0);
     res[0] = cbc.encrypt();
     res[1] = cbc.getIV();
 
