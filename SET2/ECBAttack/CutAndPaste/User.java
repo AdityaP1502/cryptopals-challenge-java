@@ -63,8 +63,9 @@ public class User {
 
   public static String receive(String encryptedMessage) {
     String keyInAscii = ASCII.ASCIIDecoder(Hex.fromHexToAscii(key));
-    ECB ecb = new ECB(encryptedMessage, keyInAscii, "HEX");
-    return ecb.decrypt("ASCII");
+    ECB ecb = new ECB(encryptedMessage, keyInAscii, "HEX", 1);
+    byte[] temp = Hex.fromHexToAscii(ecb.decrypt());
+    return ASCII.ASCIIDecoder(temp);
   }
 
   public static User parse(String encodedProfile) {
