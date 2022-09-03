@@ -30,7 +30,7 @@ public class Attack {
   public String getAdmin() {
     // profile encoding
     // email=xxx@gmail.com&uid=10&role=xxx
-    // (email=xxx...)(adminzzz...)(yyy)@gmail.com&uid=10&role=
+    // (email=xxx...)(adminzzz...)(yyy)@gmail.com&uid=10&role=ADMIN
     // z is the pad length
     // above length must be divisible by blockSize
     // append random yyy to pad the text
