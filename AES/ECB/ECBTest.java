@@ -18,11 +18,11 @@ public class ECBTest {
       while (sc.hasNextLine()) {
         temp += sc.nextLine();
       }
-      ECB ecb = new ECB(temp, KEY, "BASE64");
+      ECB ecb = new ECB(temp, KEY, "BASE64", 1);
       sc.close();
       // Write result into a file
       FileWriter wr = new FileWriter(fileOut);
-      wr.write(ecb.decrypt("ASCII"));
+      wr.write(ecb.decrypt());
       wr.close();
 
     } catch (IOException e) {

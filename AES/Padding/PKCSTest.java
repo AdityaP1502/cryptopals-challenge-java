@@ -2,13 +2,14 @@ package AES.Padding;
 
 public class PKCSTest {
   public static void main(String[] args) {
-    String x = "AAAAAAAAAAAAAA";
-    byte c = 4;
-    for (int i = 0; i < 3; i++) {
+    String x = "AAAAAAAAAAAAAAA";
+    byte c = 2;
+    for (int i = 0; i < 1; i++) {
       x += (char) c;
     }
     try {
-      System.out.println(PKCS.removePadding(x, "ASCII"));
+      String y = (PKCS.removePadding(x, "ASCII"));
+      System.out.println(y);
     } catch (InvalidPaddingException e) {
       e.printStackTrace();
       System.exit(-1);

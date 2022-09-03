@@ -56,7 +56,7 @@ public class CBCTest {
         temp += sc.nextLine();
       }
       sc.close();
-      CBC cbc = new CBC(temp, KEY, IV, "BASE64");
+      CBC cbc = new CBC(temp, KEY, IV, "BASE64", 1);
 
       // write result into text
       FileWriter wr = new FileWriter(fileDecrypted);

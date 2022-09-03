@@ -36,10 +36,10 @@ public class CBCTest2 {
     originalMessage = ASCII.ASCIIDecoder(beforeIVBytes);
     System.out.println(originalMessage);
 
-    CBC cbc = new CBC(message, keyInASCII, IV, "ASCII");
+    CBC cbc = new CBC(message, keyInASCII, IV, "ASCII", 0);
     decryptedMessage = cbc.encrypt();
     System.out.println(decryptedMessage);
-    cbc = new CBC(decryptedMessage, keyInASCII, IV, "HEX");
+    cbc = new CBC(decryptedMessage, keyInASCII, IV, "HEX", 1);
     originalMessage = cbc.decrypt();
     originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
     System.out.println(originalMessage);
