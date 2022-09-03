@@ -3,68 +3,24 @@ package AES.CBC;
 import java.util.Random;
 
 import AES.AESCipher;
+import AES.AESMode;
 import AES.InvalidBlockSizeException;
 import AES.Words;
-import AES.Padding.PKCS;
 import Encoding.Hex;
-import Encoding.UnrecognizedEncodingException;
 
-public class CBC {
+public class CBC extends AESMode{
   private String IV;
-  private String KEY;
-  private String processedString;
-  private byte[][] BLOCKS;
 
-  public CBC(String text, String key, String IV, String encoding) {
-    this.KEY = key;
+  public CBC(String text, String key, String IV, String encoding, int mode) {
+    super(text, key, encoding, mode);
     this.IV = IV;
     // change text into bytes
-    BLOCKS = toBlocks(text, encoding);
   }
 
-  public CBC(String text, String key, String encoding) {
-    KEY = key;
+  public CBC(String text, String key, String encoding, int mode) {
+    super(text, key, encoding, mode);
     setRandomIV();
-    // change text into bytes
-    BLOCKS = toBlocks(text, encoding);
   }
-
-  public byte[][] toBlocks(String text, String encoding) {
-    int length, remainder;
-    // convert text into bytes
-    byte[] temp;
-    byte[] block = null;
-    byte[][] blocks = null;
-
-    try {
-      temp = Encoding.EncodingFormat.convertToBytes(text, encoding);
-      
-      // padding length
-      length = temp.length;
-      remainder = length % 16;
-      length += remainder > 0 ? (16 - remainder) : 0;
-      
-      block = new byte[length];
-      // copy data from temp to block
-      for (int i = 0; i < temp.length; i++) {
-        block[i] = temp[i];
-      }
-      // Padding
-      if (remainder > 0) PKCS.pad(block, 16 - remainder);
-      blocks = new byte[block.length / 16][16];
-      for (int i = 0; i < blocks.length; i++) {
-        for (int j = 0; j < 16; j++) {
-          blocks[i][j] = block[16 * i + j];
-        }
-      }
-
-    } catch (UnrecognizedEncodingException e) {
-      e.printStackTrace();
-      System.exit(-1);
-    }
-    return blocks;
-  }
-
 
   public void  setRandomIV() {
     Random rnd = new Random();
@@ -77,51 +33,45 @@ public class CBC {
     IV = Hex.hexEncoder(bytesIV);
   }
 
-  public void process(int mode) {
-    processedString = "";
+  @Override
+  public void process() {
+    String text = "";
     byte[] lastCipherText = Hex.fromHexToAscii(IV);
-    int totalBlock = BLOCKS.length;
+    int totalBlock = getBlocks().length;
     String f;
 
     for (int i = 0; i < totalBlock; i++) {
       try {
-        if (mode == 0) {
+        if (getMode() == 0) {
           // Encryption
-          Words.XOR(BLOCKS[i], lastCipherText);
-          // System.out.println(Hex.hexEncoder(BLOCKS[i]));
-          f = AESCipher.encrypt(BLOCKS[i], KEY).replace(" ", "");
-          processedString += f;
+          Words.XOR(getBlocks()[i], lastCipherText);
+          // System.out.println(Hex.hexEncoder(getBlocks()[i]));
+          f = AESCipher.encrypt(getBlocks()[i], getKEY()).replace(" ", "");
+          text += f;
           lastCipherText = Hex.fromHexToAscii(f);
         }
         else {
           // Decryption
           byte[] g;
-          f = AESCipher.decrypt(BLOCKS[i], KEY).replace(" ", "");
+          f = AESCipher.decrypt(getBlocks()[i], getKEY()).replace(" ", "");
           // Convert to bytes
           g = Hex.fromHexToAscii(f);
           // Do XOR
+          // System.out.println(Hex.hexEncoder(g));
           Words.XOR(g, lastCipherText);
           // Convert back to hex
           f = Hex.hexEncoder(g);
 
-          processedString += f;
-          lastCipherText = BLOCKS[i];
+          text += f;
+          lastCipherText = getBlocks()[i];
         }
       } catch (InvalidBlockSizeException e) {
         e.printStackTrace();
         System.exit(-1);
       }
-    }    
-  }
-
-  public String encrypt() {
-    process(0);
-    return processedString;
-  } 
-
-  public String decrypt() {
-    process(1);
-    return processedString;
+    } 
+    
+    setProcessedString(text);
   }
 
   public String getIV() {
