@@ -3,6 +3,7 @@ package AES.CTR;
 import java.util.Random;
 
 import AES.AESCipher;
+import AES.AESKey;
 import AES.InvalidBlockSizeException;
 import Encoding.EncodingFormat;
 import Encoding.Hex;
@@ -15,6 +16,21 @@ public class CTR {
   private String processedMessage;
   private byte[] blocks;
 
+  public CTR() throws UnrecognizedEncodingException {
+    this.KEY = AESKey.generateRandomKey("ASCII");
+    this.nonce = generateRandomNonce();
+  }
+ 
+  public CTR(String nonce) throws UnrecognizedEncodingException {
+    this.KEY = AESKey.generateRandomKey("ASCII");
+    this.nonce = nonce;
+  }
+
+  public CTR(String key, String nonce) {
+    this.KEY = key;
+    this.nonce = nonce;
+  }
+  
   public CTR(String text, String encoding, String key, String nonce) throws UnrecognizedEncodingException {
     this.KEY = key;
     this.blocks = EncodingFormat.convertToBytes(text, encoding);
