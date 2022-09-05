@@ -54,7 +54,6 @@ public class MT19937 {
   }
 
   private void twist() {
-
     for (int i = 0; i < n - 1; i++) {
       long x = ((MT[i] & UPPER_MASK) + (MT[(i + 1) % n] & LOWER_MASK)) & bitmask;
       long longA = a & bitmask;
@@ -63,31 +62,44 @@ public class MT19937 {
 
       MT[i] = MT[(i + m) % n] ^ xA;
     }    
-
+    
     index = 0;
   }
+  private long temper(long input) {
+    long longD = d & bitmask;
+    long longB = b & bitmask;
+    long longC = c & bitmask;
+
+    // temper
+    input = input ^ ((input >> u) & longD);
+    input = input ^ ((input << s) & longB);
+    input = input ^ ((input << t) & longC);
+    input = input ^ (input >> l);
+
+    return input;
+  }
+
   private long extractNumber() {
     if (index == n) {
       twist();
     }
 
-    long y = MT[index] & bitmask;
-    long longD = d & bitmask;
-    long longB = b & bitmask;
-    long longC = c & bitmask;
-
-    y = y ^ ((y >> u) & longD);
-    y = y ^ ((y << s) & longB);
-    y = y ^ ((y << t) & longC);
-    y = y ^ (y >> l);
+    long input = MT[index] & bitmask;
+    long output = temper(input);
     index++;
 
-    return y & bitmask;
+    return output & bitmask;
   }
 
   public long nextInt() {
     // use long to simulate unsigned int
     // will return number between 0 and (2 ** 32 - 1)
     return extractNumber();
+  }
+
+  public void reset(int seed) {
+    // change the seed and reset the state
+    this.seed = seed;
+    seedMT();
   }
 }
