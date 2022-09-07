@@ -1,4 +1,4 @@
-package PRNG;
+package PRNG.MersenneTwister;
 
 import java.util.Random;
 

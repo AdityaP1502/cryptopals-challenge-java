@@ -1,4 +1,4 @@
-package PRNG;
+package PRNG.MersenneTwister;
 
 public class MT19937 {
   private int seed;
@@ -36,6 +36,14 @@ public class MT19937 {
     this.seed = seed;
     index = n + 1;
     seedMT();
+  }
+
+  public static MT19937 clone(int MT[]) {
+    MT19937 mt = new MT19937();
+    // make index to n
+    mt.index = mt.n;
+    mt.MT = MT;
+    return mt;
   }
   
   private void seedMT() {

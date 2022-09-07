@@ -1,4 +1,4 @@
-package PRNG;
+package PRNG.MersenneTwister;
 
 public class RNGTest {
   public static void main(String[] args) {

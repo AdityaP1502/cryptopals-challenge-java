@@ -1,4 +1,4 @@
-package PRNG;
+package PRNG.MersenneTwister;
 
 public class CrackTest {
   public static void main(String[] args) {
