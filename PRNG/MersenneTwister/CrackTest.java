@@ -3,7 +3,7 @@ package PRNG.MersenneTwister;
 public class CrackTest {
   public static void main(String[] args) {
     try {
-      int seed = CrackTheSeed.findSeed();
+      int seed = CrackTheSeed.findSeedTime();
       System.out.println(seed);
     } catch (InterruptedException e) {
       e.printStackTrace();
