@@ -4,36 +4,34 @@ import PRNG.MersenneTwister.MT19937;
 public class KeystreamGenerator {
   // Generate Keystream using MT19937
   private final MT19937 generator;
-  private byte[] randomBytes;
-  private int count;
+  private byte[] keystream;
 
   public KeystreamGenerator(int seed) {
+    // seed is an 16 bit number
     generator = new MT19937(seed);
-    randomBytes = new byte[4];
+    keystream = new byte[16];
   }
 
   public void setRandom() {
-    long temp = generator.nextInt();
-    System.out.println("32 bit is: " + temp);
-    long bitmask = 255L;
+    long temp, bitmask;
     // divide 32 bits temp into 4, 8 bit data
-    for (int i = 3; i >= 0; i--) {
-      randomBytes[i] = (byte) ((temp & bitmask) >> ((3 - i) * 8));
-      bitmask = bitmask << 8;
+    for (int j = 0; j < 4; j++) {
+      temp = generator.nextInt();
+      bitmask = 255L;
+      for (int i = 3; i >= 0; i--) {
+        keystream[4*j + i] = (byte) ((temp & bitmask) >> ((3 - i) * 8));
+        bitmask = bitmask << 8;
+      }
     }
   }
 
-  public byte nextByte() {
-    if (count == 0) {
-      // set randomBytes
-      setRandom();
-    }
+  public byte[] nextKeystream() {
+    setRandom();
+    return keystream;
+  }
 
-    byte output = randomBytes[count];
-
-    count++; // update count
-    if (count == 4) count = 0; // reset the state
-
-    return output;
+  public void reset(int seed) {
+    generator.reset(seed); // reset generator state
+    keystream = new byte[16]; // clear keystream output
   }
 }
