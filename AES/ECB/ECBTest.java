@@ -5,10 +5,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import Encoding.ASCII;
+import Encoding.Hex;
+
 public class ECBTest {
   public static void main(String[] args) {
-    String filepath = "SET1/AES/ECB/message.txt";
-    String filepathOut = "SET1/AES/ECB/plaintext.txt";
+    String filepath = "AES/ECB/message.txt";
+    String filepathOut = "AES/ECB/plaintext.txt";
     File file = new File(filepath);
     File fileOut = new File(filepathOut);
     String temp = "";
@@ -22,7 +25,9 @@ public class ECBTest {
       sc.close();
       // Write result into a file
       FileWriter wr = new FileWriter(fileOut);
-      wr.write(ecb.decrypt());
+      String hex = ecb.decrypt();
+      String ascii = ASCII.ASCIIDecoder(Hex.fromHexToAscii(hex));
+      wr.write(ascii);
       wr.close();
 
     } catch (IOException e) {

@@ -1,7 +1,6 @@
 package PRNG.StreamCipher;
 
 import Encoding.UnrecognizedEncodingException;
-import PRNG.MersenneTwister.MT19937;
 
 import java.util.Random;
 
@@ -10,7 +9,7 @@ import Encoding.Hex;
 
 public class StreamTest {
   public static void main(String[] args) throws UnrecognizedEncodingException {
-    Random rnd = new Random();
+    // Random rnd = new Random();
     String message = "KKKKKKKKKKAAAAAAAAAAAAAA";
 
     // for (int i = 0; i < 10 + rnd.nextInt(40); i++) {
