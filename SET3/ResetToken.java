@@ -3,7 +3,6 @@ package SET3;
 import java.util.Random;
 
 import Encoding.UnrecognizedEncodingException;
-import PRNG.MersenneTwister.MT19937;
 import PRNG.StreamCipher.Cipher;
 
 public class ResetToken {
