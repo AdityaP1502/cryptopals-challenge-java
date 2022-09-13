@@ -2,7 +2,9 @@ package SET2.EncryptionOracle;
 
 import java.util.Random;
 
+import AES.InvalidBlockSizeException;
 import AES.CBC.CBC;
+import AES.CTR.CTR;
 import AES.ECB.DetectECB;
 import AES.ECB.ECB;
 import Encoding.ASCII;
@@ -15,6 +17,7 @@ import SET2.ECBAttack.CutAndPaste.Parser;
 public class EncryptionOracle {
   final static String unknownString = "Um9sbGluJyBpbiBteSA1LjAKV2l0aCBteSByYWctdG9wIGRvd24gc28gbXkgaGFpciBjYW4gYmxvdwpUaGUgZ2lybGllcyBvbiBzdGFuZGJ5IHdhdmluZyBqdXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUgYnkK";
   public final static String DEFAULT_KEY = "bae9e8ddf212132396060a8ff1a4da1e";
+  public final static String DEFAULT_NONCE = "191f87ef86a15479";
   public final static String PREFIX = getPrefixString("ASCII");
 
   public static String getPrefixString(String encoding) {
@@ -94,28 +97,23 @@ public class EncryptionOracle {
     return res;
   }
   
-  // public static String encrypt(String text, String encoding) throws UnrecognizedEncodingException {
-    // String encryptedString;
-    // String key = AESKey.generateRandomKey("ASCII");
-    // Random rnd = new Random();
+  public static String encryptCTR(String input) throws UnrecognizedEncodingException, InvalidBlockSizeException {
+    // input is assumed to used ASCII
+    // prefix and suffix message
+    String prefix = "comment1=cooking%20MCs;userdata=";
+    String suffix = ";comment2=%20like%20a%20pound%20of%20bacon";
 
-    // if (rnd.nextBoolean()) {
-      // // do ecb
-      // ECB ecb = new ECB(text, key, encoding);
-      // encryptedString = ecb.encrypt("HEX");
-    // } else {
-      // // do cbc
-      // String IV = AESKey.generateRandomKey("HEX");
-      // CBC CBC = new CBC(text, key, IV, encoding);
-      // encryptedString = CBC.encrypt();
-    // }
-    // // // do ecb
-    // // System.out.println("ECB");
-    // // ECB ecb = new ECB(text, key, encoding);
-    // // encryptedString = ecb.encrypt("HEX");
-    // return encryptedString;
-  // }
+    // sanitize user input
+    input = Parser.sanitizeInput(input);
+    String message = prefix + input + suffix;
 
+    // encrypt
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
+    CTR ctr = new CTR(message, "ASCII", keyInASCII, DEFAULT_NONCE);
+    
+    return ctr.encrypt();
+  }
+  
   public static String check(String text) {
     String x = DetectECB.detect(text);
     System.out.println(x);
