@@ -17,11 +17,21 @@ public class ASCII {
     return text;
   }
 
+  public static String asciiToHex(String text) {
+    byte[] buff = ASCIIEncoder(text);
+    return Hex.hexEncoder(buff);
+  }
+
   public static String asciiToHex(byte[] buff) {
     return Hex.hexEncoder(buff);
   }
 
   public static String asciiToBase64(byte[] buff) {
+    return Base64.base64Encoder(buff);
+  }
+
+  public static String asciiToBase64(String text) {
+    byte[] buff = ASCIIEncoder(text);
     return Base64.base64Encoder(buff);
   }
 }
