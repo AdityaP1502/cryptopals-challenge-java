@@ -97,4 +97,20 @@ public class CTR {
   public void setNonce(String nonce) {
     this.nonce = nonce;
   }
+
+  public String edit(int offset, String newtext) throws InvalidBlockSizeException, UnrecognizedEncodingException {
+    String modifiedMessage;
+    String originalMessage = decrypt();
+    
+    // modify string, replace string from offset with newText
+    StringBuilder message = new StringBuilder(originalMessage);
+    message = message.insert(offset, newtext);
+
+    // get new ciphertext
+    modifiedMessage = message.toString();
+    setMessage(modifiedMessage, "HEX");
+    encrypt();
+
+    return processedMessage;
+  }
 }
