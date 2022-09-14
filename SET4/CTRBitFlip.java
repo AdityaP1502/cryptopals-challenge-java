@@ -19,7 +19,7 @@ public class CTRBitFlip {
     int[] bytePos = {34, 38, 40};
     int[] magics = {magic_1, magic_2, magic_3};
 
-    byte[] bytes = Hex.fromHexToAscii(ciphertext);
+    byte[] bytes = Hex.fromHexToBytes(ciphertext);
     for (int i = 0; i < 3; i++) {
       bytes[bytePos[i]] = (byte) (bytes[bytePos[i]] ^ magics[i]);
     }

@@ -16,7 +16,7 @@ public class CBCTest2 {
 
     // convert to bytes
     byte[] ivBytes = EncodingFormat.convertToBytes(IV, "HEX");
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(key));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(key));
     byte[] messageByte = EncodingFormat.convertToBytes(message, "ASCII");
     
 
@@ -41,7 +41,7 @@ public class CBCTest2 {
     System.out.println(decryptedMessage);
     cbc = new CBC(decryptedMessage, keyInASCII, IV, "HEX", 1);
     originalMessage = cbc.decrypt();
-    originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
+    originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToBytes(originalMessage));
     System.out.println(originalMessage);
   }
   

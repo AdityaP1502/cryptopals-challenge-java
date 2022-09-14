@@ -61,7 +61,7 @@ public class CBCTest {
       // write result into text
       FileWriter wr = new FileWriter(fileDecrypted);
       temp = cbc.decrypt(); // in hex
-      temp = ASCII.ASCIIDecoder(Hex.fromHexToAscii(temp));
+      temp = ASCII.ASCIIDecoder(Hex.fromHexToBytes(temp));
       wr.write(temp);
       wr.close();
 

@@ -81,7 +81,7 @@ public class SingleByteDecoder {
     }
 
   public void decrypt(String hexString) {
-    byte[] asciiArr = Hex.fromHexToAscii(hexString);
+    byte[] asciiArr = Hex.fromHexToBytes(hexString);
     decrypt(asciiArr);
   }
 

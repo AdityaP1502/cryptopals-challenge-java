@@ -2,7 +2,7 @@ package PRNG.StreamCipher;
 
 import Encoding.UnrecognizedEncodingException;
 
-import java.util.Random;
+// import java.util.Random;
 
 import Encoding.ASCII;
 import Encoding.Hex;
@@ -22,7 +22,7 @@ public class StreamTest {
     stream.setText(encryptString, "HEX");
 
     String originalMessage = stream.decrypt();
-    originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
+    originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToBytes(originalMessage));
 
     System.out.println(encryptString);
     System.out.println(originalMessage);

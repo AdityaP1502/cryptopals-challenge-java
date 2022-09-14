@@ -12,12 +12,12 @@ public class Validator {
   public final static String DEFAULT_NONCE = "191f87ef86a15479";
 
   public static boolean validate(String decryptedMessage, String IV) {
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(DEFAULT_KEY));
     CBC cbc = new CBC(decryptedMessage, keyInASCII, IV, "HEX", 1);
     String plaintextHex = cbc.decrypt(); // in hex
 
     // convert to ascii
-    String plaintext = ASCII.ASCIIDecoder(Hex.fromHexToAscii(plaintextHex));
+    String plaintext = ASCII.ASCIIDecoder(Hex.fromHexToBytes(plaintextHex));
 
     String[] splits = plaintext.split(";");
     String[][] splitOfSplits = new String[splits.length][];
@@ -32,12 +32,12 @@ public class Validator {
   }
 
   public static boolean validateCTR(String decryptedMessage) throws UnrecognizedEncodingException, InvalidBlockSizeException {
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(DEFAULT_KEY));
     CTR ctr = new CTR(decryptedMessage, "HEX", keyInASCII, DEFAULT_NONCE);
     String plaintextHex = ctr.decrypt(); // in hex
 
     // convert to ascii
-    String plaintext = ASCII.ASCIIDecoder(Hex.fromHexToAscii(plaintextHex));
+    String plaintext = ASCII.ASCIIDecoder(Hex.fromHexToBytes(plaintextHex));
 
     String[] splits = plaintext.split(";");
     String[][] splitOfSplits = new String[splits.length][];

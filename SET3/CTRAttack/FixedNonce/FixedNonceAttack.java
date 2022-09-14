@@ -116,11 +116,11 @@ public class FixedNonceAttack {
     byte[] x;
     String keystream = getKeyStream();
     String originalMessage = "";
-    byte[] y = Hex.fromHexToAscii(keystream);
+    byte[] y = Hex.fromHexToBytes(keystream);
     for (int i = 0; i < keystream.length(); i++) {
-      x = Hex.fromHexToAscii(ciphertexts[i].substring(0, keystream.length()));
+      x = Hex.fromHexToBytes(ciphertexts[i].substring(0, keystream.length()));
       originalMessage = XOR.XORCombination(x, y, 0);
-      originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
+      originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToBytes(originalMessage));
       System.out.println(originalMessage);
     }
   }

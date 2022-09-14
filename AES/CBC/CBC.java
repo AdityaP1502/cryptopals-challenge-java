@@ -36,7 +36,7 @@ public class CBC extends AESMode{
   @Override
   public void process() {
     String text = "";
-    byte[] lastCipherText = Hex.fromHexToAscii(IV);
+    byte[] lastCipherText = Hex.fromHexToBytes(IV);
     int totalBlock = getBlocks().length;
     String f;
 
@@ -48,14 +48,14 @@ public class CBC extends AESMode{
           // System.out.println(Hex.hexEncoder(getBlocks()[i]));
           f = AESCipher.encrypt(getBlocks()[i], getKEY()).replace(" ", "");
           text += f;
-          lastCipherText = Hex.fromHexToAscii(f);
+          lastCipherText = Hex.fromHexToBytes(f);
         }
         else {
           // Decryption
           byte[] g;
           f = AESCipher.decrypt(getBlocks()[i], getKEY()).replace(" ", "");
           // Convert to bytes
-          g = Hex.fromHexToAscii(f);
+          g = Hex.fromHexToBytes(f);
           // Do XOR
           // System.out.println(Hex.hexEncoder(g));
           Words.XOR(g, lastCipherText);

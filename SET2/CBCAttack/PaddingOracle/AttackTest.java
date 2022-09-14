@@ -26,7 +26,7 @@ public class AttackTest {
 
     PaddingAttack atck = new PaddingAttack(blockMessage, IV, oracle);
     String originalMessage = atck.attack();
-    String originalaMessageASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
+    String originalaMessageASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(originalMessage));
     System.out.println(originalaMessageASCII);
   }
   

@@ -14,14 +14,14 @@ public class CTRTest {
     try {
       CTR ctr = new CTR(text, "BASE64", KEY, nonce);
       String originalMessage = ctr.decrypt();
-      originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
+      originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToBytes(originalMessage));
       System.out.println(originalMessage);
 
       ctr.setMessage(message, "ASCII");
       String gibberish = ctr.encrypt();
       ctr.setMessage(gibberish, "HEX");
       originalMessage = ctr.decrypt();
-      originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(originalMessage));
+      originalMessage = ASCII.ASCIIDecoder(Hex.fromHexToBytes(originalMessage));
       System.out.println(originalMessage);
     
     } catch (UnrecognizedEncodingException | InvalidBlockSizeException e) {

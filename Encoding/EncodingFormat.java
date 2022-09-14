@@ -12,7 +12,7 @@ public class EncodingFormat {
         block = Base64.fromBase64ToAscii(text);
         break;
       case "HEX":
-        block = Hex.fromHexToAscii(text);
+        block = Hex.fromHexToBytes(text);
         break;
       default:
         throw new UnrecognizedEncodingException("Not recoginized encoding format" + encoding);

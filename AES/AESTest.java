@@ -38,7 +38,7 @@ public class AESTest {
 
       // decrypt file
       wr = new FileWriter(fileDecrypt);
-      byte[] block = Hex.fromHexToAscii(temp.replace(" ", ""));
+      byte[] block = Hex.fromHexToBytes(temp.replace(" ", ""));
       temp = AESCipher.decrypt(block, key);
       wr.write(temp);
       wr.close();

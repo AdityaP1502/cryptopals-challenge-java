@@ -26,7 +26,7 @@ public class ECBTest {
       // Write result into a file
       FileWriter wr = new FileWriter(fileOut);
       String hex = ecb.decrypt();
-      String ascii = ASCII.ASCIIDecoder(Hex.fromHexToAscii(hex));
+      String ascii = ASCII.ASCIIDecoder(Hex.fromHexToBytes(hex));
       wr.write(ascii);
       wr.close();
 

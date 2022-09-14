@@ -62,9 +62,9 @@ public class User {
   }
 
   public static String receive(String encryptedMessage) {
-    String keyInAscii = ASCII.ASCIIDecoder(Hex.fromHexToAscii(key));
+    String keyInAscii = ASCII.ASCIIDecoder(Hex.fromHexToBytes(key));
     ECB ecb = new ECB(encryptedMessage, keyInAscii, "HEX", 1);
-    byte[] temp = Hex.fromHexToAscii(ecb.decrypt());
+    byte[] temp = Hex.fromHexToBytes(ecb.decrypt());
     return ASCII.ASCIIDecoder(temp);
   }
 

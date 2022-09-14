@@ -46,10 +46,10 @@ public class EditAttack {
       // use edit to get the keystream
       String keystream = ctr.edit(0, attackString);
       // from keystream get original message
-      byte[] x = Hex.fromHexToAscii(encryptedMessage);
-      byte[] y = Hex.fromHexToAscii(keystream);
+      byte[] x = Hex.fromHexToBytes(encryptedMessage);
+      byte[] y = Hex.fromHexToBytes(keystream);
       String decrypedMessage = XOR.XORCombination(x, y, 0);
-      decrypedMessage = ASCII.ASCIIDecoder(Hex.fromHexToAscii(decrypedMessage));
+      decrypedMessage = ASCII.ASCIIDecoder(Hex.fromHexToBytes(decrypedMessage));
       System.out.println(decrypedMessage);
 
     } catch (UnrecognizedEncodingException | FileNotFoundException | InvalidBlockSizeException e) {

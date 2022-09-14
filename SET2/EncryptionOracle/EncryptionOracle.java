@@ -44,7 +44,7 @@ public class EncryptionOracle {
   public static String encryptECB(String text, String encoding) {
     // encode text under default key
     // convert HEX into ASCII
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(DEFAULT_KEY));
 
     String unknownStringDecoded = ASCII.ASCIIDecoder(Base64.fromBase64ToAscii(unknownString));
     // String unknownStringDecoded = "AAAABBBBCCCCDDDD"; 
@@ -56,7 +56,7 @@ public class EncryptionOracle {
 
   public static String encryptECB(String text, String encoding, String key) {
     // key in hex
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(key));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(key));
     
     // String unknownStringDecoded = ASCII.ASCIIDecoder(Base64.fromBase64ToAscii(unknownString));
     // // String unknownStringDecoded = "AAAABBBBCCCCDDDD"; 
@@ -77,7 +77,7 @@ public class EncryptionOracle {
   public static String[] encyptCBC(String input) {
     String[] res = new String[2];
     // input is assumed to used ASCII
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(DEFAULT_KEY));
 
     // prefix and suffix message
     String prefix = "comment1=cooking%20MCs;userdata=";
@@ -108,7 +108,7 @@ public class EncryptionOracle {
     String message = prefix + input + suffix;
 
     // encrypt
-    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToAscii(DEFAULT_KEY));
+    String keyInASCII = ASCII.ASCIIDecoder(Hex.fromHexToBytes(DEFAULT_KEY));
     CTR ctr = new CTR(message, "ASCII", keyInASCII, DEFAULT_NONCE);
     
     return ctr.encrypt();

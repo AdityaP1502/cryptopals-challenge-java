@@ -22,7 +22,7 @@ public class BitFlipAttack {
     String IV = res[1];
 
     String controlledBlock = message.substring(cipherBlockSize * 4, cipherBlockSize * 6);
-    byte[] controlledBlockBytes = Hex.fromHexToAscii(controlledBlock);
+    byte[] controlledBlockBytes = Hex.fromHexToBytes(controlledBlock);
 
     // bit error will be propagated through all blocks and error will occur at the same pos
     // use controlledBlockBytes to change ' into a, n, and t, 
