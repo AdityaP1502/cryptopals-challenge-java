@@ -123,7 +123,7 @@ public class Hex {
     return base64String;
   }
 
-  public static byte[] fromHexToAscii(String hex) {
+  public static byte[] fromHexToBytes(String hex) {
     byte[] buffer = hexDecoder(hex);
 
     int length = (int) (buffer.length / 2);
@@ -144,5 +144,10 @@ public class Hex {
     }
 
     return asciiArr;
+  }
+
+  public static String fromHexToAscii(String hex) {
+    byte[] x = fromHexToBytes(hex);
+    return ASCII.ASCIIDecoder(x);
   }
 }
