@@ -28,7 +28,7 @@ public class SHA1 {
       length += 8;
     }
 
-    int n = 448 - length;
+    int n = length <= 448 ? (448 - length) : 448 + (512 - length);
     n /= 4; // each hex character consist of 4 bit 
 
     // append 0 until message % 512 = 448
@@ -63,7 +63,7 @@ public class SHA1 {
     // break chunks into 32 bit word -> 4 bytes
     int n = 80;
     int bitmask = 0xFF;
-    int[] blocks = new int[80];
+    int[] blocks = new int[n];
     int temp;
     int count = 0;
     for (int i = 0; i < chunk.length; i += 4) {
