@@ -11,24 +11,36 @@ public class SHA1 {
   private final int INITIALIZE_VAR4 = 0xC3D2E1F0;
   private long length;
   private byte[][] chunks;
+  private int[] state = new int[5];
+
+  
+  public SHA1(String message, String encoding) {
+    if (encoding == "ASCII") message = ASCII.asciiToHex(message);
+    length = message.length() * 4;
+    createChunks(preprocess(message));
+  }
 
   public SHA1(String message) {
-    // message is in ASCII
-    message = ASCII.asciiToHex(message);
+    length = message.length() * 4;
+    createChunks(preprocess(message));
+  }
+
+  public SHA1(String message, String encoding, int length) {
+    this.length = length;
+    if (encoding == "ASCII") message = ASCII.asciiToHex(message);
     createChunks(preprocess(message));
   }
 
   private String preprocess(String message) {
     // message in hex
-    int length = message.length() * 4; // local length
-    this.length = length;
-
+    int length = message.length() * 4;
     if (length % 8 == 0) {
       message += "80";
       length += 8;
     }
 
-    int n = length <= 448 ? (448 - length) : 448 + (512 - length);
+    int lenMod = length % 512;
+    int n = lenMod <= 448 ? (448 - lenMod) : 448 + (512 - lenMod);
     n /= 4; // each hex character consist of 4 bit 
 
     // append 0 until message % 512 = 448
@@ -39,8 +51,7 @@ public class SHA1 {
     // add message length as 64 bit big - endian number
     String lengthHex = Hex.hexEncoder(this.length);
     message = message + lengthHex;
-
-    this.length = message.length();
+    System.out.println(message);
     return message;
   }
 
@@ -111,15 +122,18 @@ public class SHA1 {
     return res;
   }
 
-  private int[] process() {
+  private void initState() {
+    state[0] = INITIALIZE_VAR0;
+    state[1] = INITIALIZE_VAR1;
+    state[2] = INITIALIZE_VAR2;
+    state[3] = INITIALIZE_VAR3;
+    state[4] = INITIALIZE_VAR4;
+  }
+
+  private void process() {
     long bitmask = 0xFFFFFFFFL;
     long temp;
-    int h0 = INITIALIZE_VAR0;
-    int h1 = INITIALIZE_VAR1;
-    int h2 = INITIALIZE_VAR2;
-    int h3 = INITIALIZE_VAR3;
-    int h4 = INITIALIZE_VAR4;
-
+    
     for (int i = 0; i < chunks.length; i++) {
       /* preprocess block */
       // break chunks into 16, 32 bit word
@@ -149,25 +163,63 @@ public class SHA1 {
       }
 
       /* Add chunk hash into result */
-      h0 += a;
-      h1 += b;
-      h2 += c;
-      h3 += d;
-      h4 += e;
+      state[0] += a;
+      state[1] += b;
+      state[2] += c;
+      state[3] += d;
+      state[4] += e;
     }
-    // produce final hash value
-    // final hash value is 160 bit
-    // represent hash value as array of integer
-    int[] hash = {h0, h1, h2, h3, h4};
-    return hash;
   }
 
+  private int[] forgeState(String hash) {
+    String f;
+    byte[] g;
+
+    int[] state = new int[5];
+    int bitmask = 0xFF;
+    int start = 0;
+
+    for (int i = 0; i < 5; i++) {
+      f = hash.substring(start, start + 8);
+      g = Hex.fromHexToBytes(f);
+      for (int j = 3; j >= 0; j--) {
+        state[i] += (g[j] & bitmask) << (8 * (3 - j));
+      }
+      start = start + 8;
+    }
+
+    return state;
+  }
+
+  public static String forge(String newMessage, String hash, int messageLength) {
+    SHA1 sha = new SHA1(newMessage, "ASCII", messageLength);
+    int[] forgeState = sha.forgeState(hash);
+
+    sha.setState(forgeState);
+    sha.process();
+
+    String digest = "";
+    for (int i = 0; i < 5; i++) {
+      digest += Hex.hexEncoder(sha.state[i]);
+    }
+
+    return digest;
+  }
+  
   public String digest() {
     String digest = "";
-    int[] hash = process();
+
+    initState();
+    process();
+
     for (int i = 0; i < 5; i++) {
-      digest += Hex.hexEncoder(hash[i]);
+      digest += Hex.hexEncoder(state[i]);
     }
+
     return digest;
+  }
+
+  public void setState(int[] state) {
+    this.state = state;
   }
 }
