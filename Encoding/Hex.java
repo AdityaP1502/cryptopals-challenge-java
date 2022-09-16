@@ -50,6 +50,48 @@ public class Hex {
     return f;
   }
 
+  public static String hexEncoder(int decimal) {
+    HexMap.setMap();
+    // long is 64 bit number
+    int bitmask = 0xF0000000;
+    int bitmask2 = 0xF000000;
+    int bitmask3 = 15;
+    int shiftCount = 28;
+    byte x;
+    String hex = "";
+    
+    for (int i = 0; i < 8; i++) {
+      x = (byte) (((decimal & bitmask) >> shiftCount) & bitmask3);
+      hex += HexMap.byteToChar.get(x); 
+      shiftCount -= 4;
+      bitmask = (bitmask >> 4) & bitmask2;
+      bitmask2 = bitmask2 >> 4;
+    }
+
+    return hex;
+  }
+  
+  public static String hexEncoder(long decimal) {
+    HexMap.setMap();
+    // long is 64 bit number
+    long bitmask = 0xF000000000000000L;
+    long bitmask2 = 0xF00000000000000L;
+    int bitmask3 = 15;
+    int shiftCount = 60;
+    byte x;
+    String hex = "";
+    
+    for (int i = 0; i < 16; i++) {
+      x = (byte) (((decimal & bitmask) >> shiftCount) & bitmask3);
+      hex += HexMap.byteToChar.get(x); 
+      shiftCount -= 4;
+      bitmask = (bitmask >> 4) & bitmask2;
+      bitmask2 = bitmask2 >> 4;
+    }
+
+    return hex;
+  }
+
   public static String hexEncoder(byte data) {
     // Encode one byte of data
     HexMap.setMap();
