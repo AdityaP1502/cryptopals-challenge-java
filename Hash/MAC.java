@@ -9,7 +9,7 @@ public class MAC {
     
     switch (type) {
       case "MD4":
-        MD4 hashMD4 = new MD4(message, "ASCII");
+        MD4 hashMD4 = new MD4(signedMessage, "ASCII");
         signedMessage = hashMD4.digest();
         break;
       case "SHA1":
