@@ -1,0 +1,23 @@
+{
+  "name": "crypto",
+  "version": "1.0.0",
+  "description": "Cryptopals challenge done in java",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdityaP1502/cryptopals-challenge-java.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AdityaP1502/cryptopals-challenge-java/issues"
+  },
+  "homepage": "https://github.com/AdityaP1502/cryptopals-challenge-java#readme",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2"
+  }
+}
