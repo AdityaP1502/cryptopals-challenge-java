@@ -45,7 +45,7 @@ public class MD4 {
     createChunks(preprocess(message));
   }
 
-  private String convertToLittleEndian(String hex) {
+  public static String convertToLittleEndian(String hex) {
     String hexLittleEndian = "";
     for (int i = hex.length() - 1; i >= 1; i = i - 2) {
       hexLittleEndian += hex.charAt(i - 1);
@@ -229,12 +229,13 @@ public class MD4 {
     String f;
     byte[] g;
 
-    int[] state = new int[5];
+    int[] state = new int[4];
     int bitmask = 0xFF;
     int start = 0;
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 4; i++) {
       f = hash.substring(start, start + 8);
+      f = convertToLittleEndian(f);
       g = Hex.fromHexToBytes(f);
       for (int j = 3; j >= 0; j--) {
         state[i] += (g[j] & bitmask) << (8 * (3 - j));
@@ -250,6 +251,7 @@ public class MD4 {
   }
 
   public static String forge(String newMessage, String hash, int messageLength) {
+    String temp;
     MD4 md4 = new MD4(newMessage, "ASCII", messageLength);
     int[] forgeState = md4.forgeState(hash);
 
@@ -257,8 +259,10 @@ public class MD4 {
     md4.process();
 
     String digest = "";
-    for (int i = 0; i < 5; i++) {
-      digest += Hex.hexEncoder(md4.state[i]);
+    for (int i = 0; i < 4; i++) {
+      temp = Hex.hexEncoder(md4.state[i]);
+      temp = md4.convertToLittleEndian(temp);
+      digest += temp;
     }
 
     return digest;
