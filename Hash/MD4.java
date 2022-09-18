@@ -70,7 +70,7 @@ public class MD4 {
     // append 0 until message % 512 = 448
     for (int i = 0; i < n; i++) {
       message += '0';
-    }
+    } 
     
     // add message length as 64 bit little - endian number
     String lengthHexBigEndian = Hex.hexEncoder(this.length); // in big - endian
@@ -261,7 +261,7 @@ public class MD4 {
     String digest = "";
     for (int i = 0; i < 4; i++) {
       temp = Hex.hexEncoder(md4.state[i]);
-      temp = md4.convertToLittleEndian(temp);
+      temp = MD4.convertToLittleEndian(temp);
       digest += temp;
     }
 
