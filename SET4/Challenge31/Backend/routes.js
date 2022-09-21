@@ -1,9 +1,16 @@
-const { getFileHandler } = require('./handler');
+const { getFileHandler, createHash } = require('./handler');
 
-const route = [
+const routes = [
   {
     method: 'GET', 
     path: '/test', 
     handler: getFileHandler,
+  },
+  {
+    method: 'GET', 
+    path: '/test/hash', 
+    handler: createHash, 
   }
 ]
+
+module.exports = { routes };
