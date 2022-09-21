@@ -1,21 +1,16 @@
-const { KEY } = require('./server');
-
-const sign = (message) => {
-  // implement HMAC in here
-  // return valid signature in hex
-}
-
+const { read } = require('./fileHandler');
+const { sign } = require('./HMAC');
 const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 const checkSignature_insecure = async (signature, message) => {
   // Generate valid signature
-  const validSign = sign(message);
+  let validSign = await sign(message);
   const bufValidSign = new Buffer.from(validSign, 'hex');
   const bufSign = new Buffer.from(signature, 'hex');
   const zipSign = [bufSign, bufValidSign];
-  const falseSign = false;
+  let falseSign = false;
 
   for ([x, y] in zipSign) {
     if (x != y) {
@@ -30,12 +25,28 @@ const checkSignature_insecure = async (signature, message) => {
   return falseSign;
 }
 
-const getFileHandler = (request, h) => {
+const getFileHandler = async (request, h) => {
   // take file and signature query parameters
-  const {file, signature} = request.query();
-  isValid = checkSignature_insecure(signature, file);
+  const {file, signature} = request.query;
 
-  if (!isValid) {
+  if (!file && !signature) {
+    const response = h.response({
+      status: 'fail', 
+      message: 'Invalid file or signature'
+    })
+    response.code(500);
+    response.type('application/json');
+    return response;
+  }
+
+  const date = new Date().toString().slice(0, 24);
+  console.log(`${date}: Received File request ${file} with signature ${signature}`);
+
+  isFalse = await checkSignature_insecure(signature, file);
+  // isFalse = true;
+  console.log(`Valid Signature: ${!isFalse}`);
+
+  if (isFalse) {
     const response = h.response({
       status: 'fail', 
       message: 'Invalid Signature',
@@ -47,9 +58,53 @@ const getFileHandler = (request, h) => {
   }
 
   // TODO: Read file
-  // TODO: Return the content of the file
+  const {data, err} = await read(file);
+  console.log(err);
+
+  if (err == 1) {
+    const response = h.response({
+      'status': 'fail', 
+      'message': 'File not found or file is broken'
+    }).code(500)
+      .type('application/json');
+
+    return response;
+  }
+
+  console.log(data);
+  const response = h.response({
+    stataus: 'success', 
+    message: 'Authentication successfull', 
+    data , 
+  })
+  response.code(200);
+  response.type('application/json');
+  return response;
+}
+
+const createHash = (request, h) => {
+  const {message} = request.query;
+  if (!message) {
+    const response = h.response({
+      status: 'fail', 
+      message: 'Invalid message'
+    }).code(500)
+      .type('application/json');
+    return response;
+  } 
+
+  hashGenerator = new SHA1(message);
+  hash = hashGenerator.digest();
+
+  const response = h.response({
+    status: 'success',
+    hash,
+  }).code(200)
+    .type('application/json');
+
+  return response;
 }
 
 module.exports = {
-  getFileHandler,
+  getFileHandler, createHash, 
 }
