@@ -31,7 +31,18 @@ const getBlockKey = (key) => {
   return secondKey;
 }
 
+const XOR = (x, y) => {
+  g = []
+
+  for (let i = 0; i < x.length; i++) {
+    g.push(x[i] ^ y[i])
+  }
+
+  return new Buffer.from(g);
+}
+
 const HMAC = async (message)  => {
+  console.log(message);
   // TODO: Implement HMAC Algorithm here
 
   /* Input :
@@ -46,22 +57,30 @@ const HMAC = async (message)  => {
   // compute blockSizedKey
   const key = Buffer.from(KEY).toString('hex'); 
   blockKey = getBlockKey(key);
-  blockKeyBytes = parseInt(blockKey, 16);
+  //console.log(`block key:${blockKey}`);
+  blockKeyBytes = Buffer.from(blockKey, 'hex');
 
   opad = "5c".repeat(BLOCK_SIZE);
-  opadBytes = parseInt(opad, 16)
+  opadBytes = Buffer.from(opad, 'hex');
 
   ipad = '36'.repeat(BLOCK_SIZE);
-  ipadBytes = parseInt(ipad, 16);
+  ipadBytes = Buffer.from(ipad, 'hex')
 
-  o_key_pad = blockKeyBytes ^ opadBytes;
-  i_key_pad =  blockKeyBytes ^ ipadBytes
+  o_key_pad = XOR(blockKeyBytes, opadBytes);
+  o_key_pad = o_key_pad.toString('hex')
+  i_key_pad = XOR(blockKeyBytes, ipadBytes);
+  i_key_pad = i_key_pad.toString('hex')
+
+  // console.log(`o_key_pad: ${o_key_pad},\ni_key_pad: ${i_key_pad}`);
 
   Hash.setMessage(i_key_pad + message, 'HEX');
   const firstHash = Hash.digest();
-
+  // console.log(`first round hash=`+ firstHash);
+  // console.log(`Second round message: ${o_key_pad + firstHash}`);
   Hash.setMessage(o_key_pad + firstHash, 'HEX');
-  return Hash.digest();
+  const signature = Hash.digest();
+  // console.log(`Signature is: ${signature}`);
+  return signature;
 }
 
 module.exports = { sign };
