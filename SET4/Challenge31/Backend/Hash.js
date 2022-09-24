@@ -121,7 +121,6 @@ class SHA1 {
   }
 
   doProcess() {
-    let bitmask = 0xFFFFFFFF;
     let a, b, c, d, e, f, g;
     let temp;
     
@@ -134,34 +133,50 @@ class SHA1 {
       this.fill(words);
 
       /* Init hash value */
-      a = INITIALIZE_VAR0;
-      b = INITIALIZE_VAR1;
-      c = INITIALIZE_VAR2;
-      d = INITIALIZE_VAR3;
-      e = INITIALIZE_VAR4;
+      a = this.state[0];
+      b = this.state[1];
+      c = this.state[2];
+      d = this.state[3];
+      e = this.state[4];
 
       /* Main Loop */
       for (let j = 0; j < 80; j++) {
         [f, g] = this.mainLoopOp(a, b, c, d, j);
         
-        temp = (this.lr(a, 5) + f + e + g + words[j]) & bitmask;
+        temp = (this.lr(a, 5) + f + e + g + words[j]) & this.BITMASK;
         // update hash value
-        e = d;
-        d = c;
-        c = this.lr(b, 30);
-        b = a;
+        e = d & this.BITMASK;
+        d = c & this.BITMASK;
+        c = this.lr(b, 30) & this.BITMASK;
+        b = a & this.BITMASK;
         a = temp & this.BITMASK;
       }
 
       /* Add chunk hash into result */
-      this.state[0] += a;
-      this.state[1] += b;
-      this.state[2] += c;
-      this.state[3] += d;
-      this.state[4] += e;
+      this.state[0] = (this.state[0] + a) & this.BITMASK;
+      this.state[1] = (this.state[1] + b) & this.BITMASK;
+      this.state[2] = (this.state[2] + c) & this.BITMASK;
+      this.state[3] = (this.state[3] + d) & this.BITMASK;
+      this.state[4] = (this.state[4] + e) & this.BITMASK;
+    }
+  }
+
+  toString(x) {
+    // javascript toString for number is a bit odd
+    let temp;
+    const y = 255; // 1111111
+    let res = '';
+
+    // x is a 32 bit number
+
+
+    for (let i = 0; i < 4; i++) {
+      temp = x & y;
+      res = (temp > 15 ? temp.toString(16) : '0' + temp.toString(16)) + res;
+      x = (x >> 8) ; // remove the first 8 bits    }
     }
 
-    this.state.map((x) => x & this.BITMASK)
+    return res;
   }
 
   digest() {
@@ -173,9 +188,8 @@ class SHA1 {
     let digest = "";
     this.initState();
     this.doProcess();
-
     this.state.forEach(element => {
-      digest += element.toString(16);
+      digest += this.toString(element);
     });
 
     return digest;
@@ -188,8 +202,10 @@ class SHA1 {
   }
 }
 
-// message = "The quick brown fox jumps over the lazy dog"
-// sha = new SHA1(message);
+// let a = '6f737a7a7961166563747b77647f7873363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636363636';
+// let b = '7061737377642e747874'
+// let message = a + b;
+// sha = new SHA1(message, 'hex');
 // hash = sha.digest();
 // console.log(hash);
 
