@@ -45,6 +45,10 @@ public class MD4 {
     createChunks(preprocess(message));
   }
 
+  public MD4() {
+    this.length = -1;
+  }
+  
   public static String convertToLittleEndian(String hex) {
     String hexLittleEndian = "";
     for (int i = hex.length() - 1; i >= 1; i = i - 2) {
