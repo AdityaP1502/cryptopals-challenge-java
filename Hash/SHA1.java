@@ -31,6 +31,16 @@ public class SHA1 {
     createChunks(preprocess(message));
   }
 
+  public SHA1() {
+    this.length = -1;
+  }
+
+  public void setMessage(String message, String encoding) {
+    if (encoding == "ASCII") message = ASCII.asciiToHex(message);
+    this.length = message.length() * 4;
+    createChunks(preprocess(message));
+  }
+
   private String preprocess(String message) {
     // message in hex
     int length = message.length() * 4;
@@ -51,7 +61,7 @@ public class SHA1 {
     // add message length as 64 bit big - endian number
     String lengthHex = Hex.hexEncoder(this.length);
     message = message + lengthHex;
-    System.out.println(message);
+    // System.out.println(message);
     return message;
   }
 
@@ -133,7 +143,8 @@ public class SHA1 {
   private void process() {
     long bitmask = 0xFFFFFFFFL;
     long temp;
-    
+    int a, b, c, d, e; // init hash value
+
     for (int i = 0; i < chunks.length; i++) {
       /* preprocess block */
       // break chunks into 16, 32 bit word
@@ -143,11 +154,11 @@ public class SHA1 {
       fill(words);
 
       /* Init hash value */
-      int a = INITIALIZE_VAR0;
-      int b = INITIALIZE_VAR1;
-      int c = INITIALIZE_VAR2;
-      int d = INITIALIZE_VAR3;
-      int e = INITIALIZE_VAR4;
+      a = state[0];
+      b = state[1];
+      c = state[2];
+      d = state[3];
+      e = state[4];
 
       /* Main Loop */
       for (int j = 0; j < 80; j++) {
