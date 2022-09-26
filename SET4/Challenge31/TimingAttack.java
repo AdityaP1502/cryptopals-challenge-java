@@ -1,7 +1,6 @@
 package SET4.Challenge31;
 
 import java.io.IOException;
-
 import Encoding.Hex;
 
 public class TimingAttack {
@@ -11,6 +10,7 @@ public class TimingAttack {
   public static final long WINDOW = 10;
 	public static final int MAX_COUNT = 5;
 	public static final int RETRY_COUNT = 3;
+
 
   public static void init() throws IOException {
     // find byte process tiem
@@ -158,7 +158,8 @@ public class TimingAttack {
 			while (f == "") {
 				System.out.println("Error: Can't find bytes");
 				if (skipBytes == 255 || signature.length() == 0) {
-					System.out.println("Failed");
+          System.out.println("Failed");
+          System.out.println("Try running again from " + signature);
 					System.exit(-1);
 				}
 				// rebuilding from prev state
@@ -169,6 +170,7 @@ public class TimingAttack {
 				
 				if (f == "") {
 					System.out.println("Failed rebuilding!");
+          System.out.println("Try running again from " + signature);
 					System.exit(-1);
 				}
 				
@@ -187,3 +189,4 @@ public class TimingAttack {
 		System.out.println(f);
 	}
 }
+
