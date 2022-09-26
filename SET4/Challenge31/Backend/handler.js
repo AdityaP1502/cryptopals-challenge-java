@@ -26,7 +26,7 @@ const checkSignature_insecure = async (signature, message) => {
 
 			// sleep for 50ms if x == y
 		startTime = Date.now();
-		await sleep(20);
+		await sleep(5);
 		endTime = Date.now();
 		//console.log(`I sleep for ${endTime - startTime} ms`);
 		}
